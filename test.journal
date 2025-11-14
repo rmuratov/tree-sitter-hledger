@@ -1,0 +1,50 @@
+# Example hledger journal file
+
+; Comment styles
+* Another comment style
+
+comment
+This is a multi-line comment block
+that spans multiple lines
+end comment
+
+account assets:bank:checking
+    note This is my main checking account
+
+commodity $
+    format $1,000.00
+
+2024-01-01 * opening balances
+    assets:bank:checking    $1000.00
+    equity:opening
+
+2024-01-15 ! (REF123) Grocery Store | Weekly shopping ; inline comment
+    expenses:food:groceries    $85.50
+    assets:bank:checking
+
+2024-02-01 Rent Payment
+    expenses:rent    $1200.00
+    assets:bank:checking    $-1200.00 = $800.00
+
+2024-02-05 Investment
+    assets:investments    10 AAPL @ $150.00
+    assets:bank:checking
+
+2024-02-10 Salary
+    assets:bank:checking    $3000.00
+    income:salary
+
+; Virtual posting example
+2024-02-15 Budget allocation
+    (budget:food)    $500.00
+    [budget:housing]    $1500.00
+
+P 2024-02-20 AAPL $155.00
+
+include other.journal
+
+Y 2024
+
+D $1,000.00
+
+alias checking = assets:bank:checking

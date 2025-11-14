@@ -1,12 +1,706 @@
 [
   {
-    "type": "source_file",
+    "type": "account",
     "named": true,
-    "root": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "balanced_virtual_account",
+          "named": true
+        },
+        {
+          "type": "virtual_account",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "account_directive",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "account_subdirective",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "inline_comment",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "alias_directive",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "alias_pattern",
+          "named": true
+        },
+        {
+          "type": "alias_replacement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "amount",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "commodity",
+          "named": true
+        },
+        {
+          "type": "quantity",
+          "named": true
+        },
+        {
+          "type": "total_price",
+          "named": true
+        },
+        {
+          "type": "unit_price",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "apply_account_directive",
+    "named": true,
     "fields": {}
   },
   {
-    "type": "hello",
+    "type": "balance_assertion",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "amount",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "balanced_virtual_account",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "comment",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "comment_text",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "commodity_directive",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "commodity",
+          "named": true
+        },
+        {
+          "type": "commodity_subdirective",
+          "named": true
+        },
+        {
+          "type": "inline_comment",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "date",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "secondary_date",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "decimal_mark_directive",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "default_commodity_directive",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "commodity",
+          "named": true
+        },
+        {
+          "type": "quantity",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "description",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "note",
+          "named": true
+        },
+        {
+          "type": "payee",
+          "named": true
+        },
+        {
+          "type": "text",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "directive",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "account_directive",
+          "named": true
+        },
+        {
+          "type": "alias_directive",
+          "named": true
+        },
+        {
+          "type": "apply_account_directive",
+          "named": true
+        },
+        {
+          "type": "commodity_directive",
+          "named": true
+        },
+        {
+          "type": "decimal_mark_directive",
+          "named": true
+        },
+        {
+          "type": "default_commodity_directive",
+          "named": true
+        },
+        {
+          "type": "end_aliases_directive",
+          "named": true
+        },
+        {
+          "type": "end_apply_account_directive",
+          "named": true
+        },
+        {
+          "type": "include_directive",
+          "named": true
+        },
+        {
+          "type": "payee_directive",
+          "named": true
+        },
+        {
+          "type": "tag_directive",
+          "named": true
+        },
+        {
+          "type": "year_directive",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "end_aliases_directive",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "end_apply_account_directive",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "include_directive",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "file_path",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "inline_comment",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "comment_text",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "payee_directive",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "payee_name",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "posting",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "account",
+          "named": true
+        },
+        {
+          "type": "amount",
+          "named": true
+        },
+        {
+          "type": "balance_assertion",
+          "named": true
+        },
+        {
+          "type": "inline_comment",
+          "named": true
+        },
+        {
+          "type": "status",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "price_directive",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "commodity",
+          "named": true
+        },
+        {
+          "type": "inline_comment",
+          "named": true
+        },
+        {
+          "type": "quantity",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "secondary_date",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "source_file",
+    "named": true,
+    "root": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "blank_line",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "directive",
+          "named": true
+        },
+        {
+          "type": "price_directive",
+          "named": true
+        },
+        {
+          "type": "transaction",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "tag_directive",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "tag_name",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "total_price",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "commodity",
+          "named": true
+        },
+        {
+          "type": "quantity",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "transaction",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "code",
+          "named": true
+        },
+        {
+          "type": "date",
+          "named": true
+        },
+        {
+          "type": "description",
+          "named": true
+        },
+        {
+          "type": "inline_comment",
+          "named": true
+        },
+        {
+          "type": "posting",
+          "named": true
+        },
+        {
+          "type": "status",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "unit_price",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "commodity",
+          "named": true
+        },
+        {
+          "type": "quantity",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "virtual_account",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "year_directive",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "\n",
+    "named": false
+  },
+  {
+    "type": "#",
+    "named": false
+  },
+  {
+    "type": "(",
+    "named": false
+  },
+  {
+    "type": ")",
+    "named": false
+  },
+  {
+    "type": "*",
+    "named": false
+  },
+  {
+    "type": ",",
+    "named": false
+  },
+  {
+    "type": ".",
+    "named": false
+  },
+  {
+    "type": ";",
+    "named": false
+  },
+  {
+    "type": "=",
+    "named": false
+  },
+  {
+    "type": "==",
+    "named": false
+  },
+  {
+    "type": "@",
+    "named": false
+  },
+  {
+    "type": "@@",
+    "named": false
+  },
+  {
+    "type": "D",
+    "named": false
+  },
+  {
+    "type": "P",
+    "named": false
+  },
+  {
+    "type": "Y",
+    "named": false
+  },
+  {
+    "type": "[",
+    "named": false
+  },
+  {
+    "type": "]",
+    "named": false
+  },
+  {
+    "type": "account",
+    "named": false
+  },
+  {
+    "type": "account_subdirective",
+    "named": true
+  },
+  {
+    "type": "alias",
+    "named": false
+  },
+  {
+    "type": "alias_pattern",
+    "named": true
+  },
+  {
+    "type": "alias_replacement",
+    "named": true
+  },
+  {
+    "type": "apply account",
+    "named": false
+  },
+  {
+    "type": "blank_line",
+    "named": true
+  },
+  {
+    "type": "code",
+    "named": true
+  },
+  {
+    "type": "comment",
+    "named": false
+  },
+  {
+    "type": "comment_text",
+    "named": true
+  },
+  {
+    "type": "commodity",
+    "named": true
+  },
+  {
+    "type": "commodity",
+    "named": false
+  },
+  {
+    "type": "commodity_subdirective",
+    "named": true
+  },
+  {
+    "type": "decimal-mark",
+    "named": false
+  },
+  {
+    "type": "end aliases",
+    "named": false
+  },
+  {
+    "type": "end apply account",
+    "named": false
+  },
+  {
+    "type": "end comment",
+    "named": false
+  },
+  {
+    "type": "file_path",
+    "named": true
+  },
+  {
+    "type": "include",
+    "named": false
+  },
+  {
+    "type": "note",
+    "named": true
+  },
+  {
+    "type": "payee",
+    "named": true
+  },
+  {
+    "type": "payee",
+    "named": false
+  },
+  {
+    "type": "payee_name",
+    "named": true
+  },
+  {
+    "type": "quantity",
+    "named": true
+  },
+  {
+    "type": "status",
+    "named": true
+  },
+  {
+    "type": "tag",
+    "named": false
+  },
+  {
+    "type": "tag_name",
+    "named": true
+  },
+  {
+    "type": "text",
+    "named": true
+  },
+  {
+    "type": "|",
     "named": false
   }
 ]
