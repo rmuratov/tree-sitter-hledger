@@ -1,0 +1,42 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "hledger",
+      "camelcase": "Hledger",
+      "title": "hledger",
+      "scope": "source.hledger",
+      "file-types": [
+        "journal",
+        "hledger",
+        "ledger"
+      ],
+      "injection-regex": "^hledger$",
+      "class-name": "TreeSitterHledger"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "🌳 A tree-sitter grammar for the hledger plain text accounting journal files",
+    "authors": [
+      {
+        "name": "Ramil Muratov",
+        "email": "ramil@muratov.space",
+        "url": "https://muratov.space/"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/rmuratov/tree-sitter-hledger"
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": true,
+    "node": true,
+    "python": true,
+    "rust": true,
+    "swift": true,
+    "zig": false
+  }
+}

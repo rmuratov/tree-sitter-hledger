@@ -1,0 +1,34 @@
+[package]
+name = "tree-sitter-hledger"
+description = "🌳 A tree-sitter grammar for the hledger plain text accounting journal files"
+version = "0.1.0"
+authors = ["Ramil Muratov <ramil@muratov.space>"]
+license = "MIT"
+readme = "README.md"
+keywords = ["incremental", "parsing", "tree-sitter", "hledger"]
+categories = ["parser-implementations", "parsing", "text-editors"]
+repository = "https://github.com/rmuratov/tree-sitter-hledger"
+edition = "2021"
+autoexamples = false
+
+build = "bindings/rust/build.rs"
+include = [
+  "bindings/rust/*",
+  "grammar.js",
+  "queries/*",
+  "src/*",
+  "tree-sitter.json",
+  "/LICENSE",
+]
+
+[lib]
+path = "bindings/rust/lib.rs"
+
+[dependencies]
+tree-sitter-language = "0.1"
+
+[build-dependencies]
+cc = "1.2"
+
+[dev-dependencies]
+tree-sitter = "0.25.10"
