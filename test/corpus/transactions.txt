@@ -1,0 +1,262 @@
+==================
+Simple transaction
+==================
+2025-01-15 Grocery shopping
+  Expenses:Food  $50.00
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Transaction with status
+==================
+2025-01-15 * Coffee shop
+  Expenses:Dining  $5.50
+  Assets:Cash
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (status)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Transaction with pending status
+==================
+2025-01-15 ! Pending payment
+  Expenses:Utilities  $100
+  Liabilities:CreditCard
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (status)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Transaction with code
+==================
+2025-01-15 (INVOICE-123)
+  Assets:Checking  $1000.00
+  Income:Consulting
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (code)
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Transaction with status and code
+==================
+2025-01-15 * (CHECK-456)
+  Expenses:Rent  $1500.00
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (status)
+    (code)
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Transaction with simple description
+==================
+2025-01-15 Office supplies
+  Expenses:Office  $75.50
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Transaction with secondary date
+==================
+2025-01-15=2025-01-10 Restaurant
+  Expenses:Dining  $45.00
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date
+      (secondary_date))
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Transaction with posting status
+==================
+2025-01-15 Shopping
+  * Expenses:Clothing  $100.00
+  ! Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (status)
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (status)
+      (account))))
+
+==================
+Transaction with inline comment
+==================
+2025-01-15 Grocery shopping ; weekly shopping
+  Expenses:Food  $50.00
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (inline_comment (comment_text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Transaction with posting inline comment
+==================
+2025-01-15 Shopping
+  Expenses:Food  $30.00  ; groceries
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity))
+      (inline_comment (comment_text)))
+    (posting
+      (account))))
+
+==================
+Transaction with multiple postings
+==================
+2025-01-15 Split transaction
+  Expenses:Food  $30.00
+  Expenses:Transport  $15.00
+  Expenses:Entertainment  $25.00
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Transaction with virtual account
+==================
+2025-01-15 Budget allocation
+  (Budget:Food)  $200.00
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account (virtual_account))
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Transaction with balanced virtual account
+==================
+2025-01-15 Budget tracking
+  [Budget:Savings]  $500.00
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account (balanced_virtual_account))
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))

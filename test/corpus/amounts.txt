@@ -1,0 +1,274 @@
+==================
+Amount with commodity before quantity
+==================
+2025-01-15 Purchase
+  Expenses:Shopping  $100.00
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Amount with commodity after quantity
+==================
+2025-01-15 Purchase
+  Expenses:Shopping  100.00 EUR
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (quantity) (commodity)))
+    (posting
+      (account))))
+
+==================
+Amount with negative quantity
+==================
+2025-01-15 Refund
+  Assets:Checking  -50.00 USD
+  Expenses:Shopping
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (quantity) (commodity)))
+    (posting
+      (account))))
+
+==================
+Amount with positive sign
+==================
+2025-01-15 Income
+  Assets:Checking  +1000.00 USD
+  Income:Salary
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (quantity) (commodity)))
+    (posting
+      (account))))
+
+==================
+Amount with comma decimal separator
+==================
+2025-01-15 Purchase
+  Expenses:Shopping  50,75 EUR
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (quantity) (commodity)))
+    (posting
+      (account))))
+
+==================
+Amount with scientific notation
+==================
+2025-01-15 Large transaction
+  Assets:Investment  1.5e6 USD
+  Income:Investment
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (quantity) (commodity)))
+    (posting
+      (account))))
+
+==================
+Amount with various currency symbols
+==================
+2025-01-15 Multi-currency
+  Expenses:Shopping  €100.00
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Amount with quoted commodity
+==================
+2025-01-15 Stock purchase
+  Assets:Stocks  10 "AAPL"
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (quantity) (commodity)))
+    (posting
+      (account))))
+
+==================
+Amount with unit price
+==================
+2025-01-15 Stock purchase
+  Assets:Stocks  10 AAPL @ $150.00
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount
+        (quantity)
+        (commodity)
+        (unit_price (commodity) (quantity))))
+    (posting
+      (account))))
+
+==================
+Amount with total price
+==================
+2025-01-15 Stock purchase
+  Assets:Stocks  10 AAPL @@ $1500.00
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount
+        (quantity)
+        (commodity)
+        (total_price (commodity) (quantity))))
+    (posting
+      (account))))
+
+==================
+Amount with balance assertion
+==================
+2025-01-15 Checking balance
+  Assets:Checking  $100.00 = $500.00
+  Income:Salary
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity))
+      (balance_assertion (amount (commodity) (quantity))))
+    (posting
+      (account))))
+
+==================
+Amount with strict balance assertion
+==================
+2025-01-15 Checking balance
+  Assets:Checking  $100.00 == $500.00
+  Income:Salary
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity))
+      (balance_assertion (amount (commodity) (quantity))))
+    (posting
+      (account))))
+
+==================
+Amount with inclusive balance assertion
+==================
+2025-01-15 Checking balance
+  Assets:Checking  $100.00 =* $500.00
+  Income:Salary
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity))
+      (balance_assertion (amount (commodity) (quantity))))
+    (posting
+      (account))))
+
+==================
+Posting without amount
+==================
+2025-01-15 Inferred amount
+  Expenses:Food  $50.00
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))

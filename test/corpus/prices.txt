@@ -1,0 +1,127 @@
+==================
+Simple price directive
+==================
+P 2025-01-15 USD $1.00
+
+---
+
+(source_file
+  (price_directive
+    (commodity)
+    (commodity)
+    (quantity)))
+
+==================
+Price directive with commodity before quantity
+==================
+P 2025-01-15 EUR $1.20
+
+---
+
+(source_file
+  (price_directive
+    (commodity)
+    (commodity)
+    (quantity)))
+
+==================
+Price directive with commodity after quantity
+==================
+P 2025-01-15 BTC 50000.00 USD
+
+---
+
+(source_file
+  (price_directive
+    (commodity)
+    (quantity)
+    (commodity)))
+
+==================
+Price directive with quoted commodity
+==================
+P 2025-01-15 "AAPL" $150.00
+
+---
+
+(source_file
+  (price_directive
+    (commodity)
+    (commodity)
+    (quantity)))
+
+==================
+Price directive with decimal
+==================
+P 2025-01-15 EUR 1.2345 USD
+
+---
+
+(source_file
+  (price_directive
+    (commodity)
+    (quantity)
+    (commodity)))
+
+==================
+Price directive with comment
+==================
+P 2025-01-15 EUR $1.20 ; exchange rate
+
+---
+
+(source_file
+  (price_directive
+    (commodity)
+    (commodity)
+    (quantity)
+    (inline_comment (comment_text))))
+
+==================
+Price directive with slash date
+==================
+P 2025/01/15 GBP $1.35
+
+---
+
+(source_file
+  (price_directive
+    (commodity)
+    (commodity)
+    (quantity)))
+
+==================
+Price directive with period date
+==================
+P 2025.01.15 JPY $0.0091
+
+---
+
+(source_file
+  (price_directive
+    (commodity)
+    (commodity)
+    (quantity)))
+
+==================
+Multiple price directives
+==================
+P 2025-01-15 EUR $1.20
+P 2025-01-15 GBP $1.35
+P 2025-01-15 JPY $0.0091
+
+---
+
+(source_file
+  (price_directive
+    (commodity)
+    (commodity)
+    (quantity))
+  (price_directive
+    (commodity)
+    (commodity)
+    (quantity))
+  (price_directive
+    (commodity)
+    (commodity)
+    (quantity)))

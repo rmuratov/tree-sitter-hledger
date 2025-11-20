@@ -12,10 +12,7 @@ module.exports = grammar({
 
   extras: ($) => [/ /, /\t/],
 
-  conflicts: ($) => [
-    [$.account_directive],
-    [$.commodity_directive],
-  ],
+  conflicts: ($) => [[$.account_directive], [$.commodity_directive]],
 
   rules: {
     source_file: ($) => repeat($._entry),
@@ -52,10 +49,7 @@ module.exports = grammar({
       ),
 
     inline_comment: ($) =>
-      seq(
-        choice(";", "#"),
-        optional(alias(/[^\n]*/, $.comment_text)),
-      ),
+      seq(choice(";", "#"), optional(alias(/[^\n]*/, $.comment_text))),
 
     blank_line: ($) => /\n/,
 
@@ -136,11 +130,7 @@ module.exports = grammar({
         optional($.status),
         $.account,
         optional(
-          seq(
-            /[ \t]{2,}/,
-            optional($.amount),
-            optional($.balance_assertion),
-          ),
+          seq(/[ \t]{2,}/, optional($.amount), optional($.balance_assertion)),
         ),
         optional($.inline_comment),
         "\n",
@@ -148,14 +138,11 @@ module.exports = grammar({
 
     account: ($) =>
       seq(
-        choice(
-          $.virtual_account,
-          $.balanced_virtual_account,
-          $._account_name,
-        ),
+        choice($.virtual_account, $.balanced_virtual_account, $._account_name),
       ),
 
-    _account_name: ($) => /[a-zA-Z0-9_\-]([a-zA-Z0-9_\-:]| [a-zA-Z0-9_\-:])*[a-zA-Z0-9_\-:]?/,
+    _account_name: ($) =>
+      /[a-zA-Z0-9_\-]([a-zA-Z0-9_\-:]| [a-zA-Z0-9_\-:])*[a-zA-Z0-9_\-:]?/,
 
     virtual_account: ($) => seq("(", $._account_name, ")"),
 
@@ -197,20 +184,10 @@ module.exports = grammar({
       ),
 
     unit_price: ($) =>
-      seq(
-        "@",
-        optional($.commodity),
-        $.quantity,
-        optional($.commodity),
-      ),
+      seq("@", optional($.commodity), $.quantity, optional($.commodity)),
 
     total_price: ($) =>
-      seq(
-        "@@",
-        optional($.commodity),
-        $.quantity,
-        optional($.commodity),
-      ),
+      seq("@@", optional($.commodity), $.quantity, optional($.commodity)),
 
     balance_assertion: ($) =>
       choice(
@@ -247,11 +224,7 @@ module.exports = grammar({
         "\n",
         repeat(
           choice(
-            seq(
-              /[ \t]+/,
-              alias(/[^\n]+/, $.account_subdirective),
-              "\n",
-            ),
+            seq(/[ \t]+/, alias(/[^\n]+/, $.account_subdirective), "\n"),
             $.comment,
           ),
         ),
@@ -266,11 +239,7 @@ module.exports = grammar({
         "\n",
         repeat(
           choice(
-            seq(
-              /[ \t]+/,
-              alias(/[^\n]+/, $.commodity_subdirective),
-              "\n",
-            ),
+            seq(/[ \t]+/, alias(/[^\n]+/, $.commodity_subdirective), "\n"),
             $.comment,
           ),
         ),

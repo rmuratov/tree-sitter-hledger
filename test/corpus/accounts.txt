@@ -1,0 +1,189 @@
+==================
+Simple account name
+==================
+2025-01-15 Transaction
+  Assets:Checking  $100.00
+  Income:Salary
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Account with multiple levels
+==================
+2025-01-15 Transaction
+  Assets:Bank:Checking:Main  $100.00
+  Income:Salary:FullTime
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Account with numbers
+==================
+2025-01-15 Transaction
+  Assets:Account123  $100.00
+  Income:Source456
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Account with underscores
+==================
+2025-01-15 Transaction
+  Assets:My_Checking  $100.00
+  Income:Full_Time_Salary
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Account with hyphens
+==================
+2025-01-15 Transaction
+  Assets:My-Checking  $100.00
+  Income:Full-Time-Salary
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Account with spaces
+==================
+2025-01-15 Transaction
+  Assets:My Checking Account  $100.00
+  Income:Full Time Salary
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Virtual account
+==================
+2025-01-15 Transaction
+  (Budget:Food)  $100.00
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account (virtual_account))
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Balanced virtual account
+==================
+2025-01-15 Transaction
+  [Budget:Savings]  $500.00
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account (balanced_virtual_account))
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Virtual account with multiple levels
+==================
+2025-01-15 Transaction
+  (Budget:Monthly:Food)  $200.00
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account (virtual_account))
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Balanced virtual account with spaces
+==================
+2025-01-15 Transaction
+  [Budget:Monthly Savings]  $500.00
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account (balanced_virtual_account))
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))

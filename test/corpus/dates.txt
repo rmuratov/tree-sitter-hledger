@@ -1,0 +1,193 @@
+==================
+Date with hyphens
+==================
+2025-01-15 Transaction
+  Expenses:Food  $10.00
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Date with slashes
+==================
+2025/01/15 Transaction
+  Expenses:Food  $10.00
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Date with periods
+==================
+2025.01.15 Transaction
+  Expenses:Food  $10.00
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Date with single digit month
+==================
+2025-1-15 Transaction
+  Expenses:Food  $10.00
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Date with single digit day
+==================
+2025-01-5 Transaction
+  Expenses:Food  $10.00
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Date with both single digits
+==================
+2025-1-5 Transaction
+  Expenses:Food  $10.00
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Secondary date with hyphens
+==================
+2025-01-15=2025-01-10 Transaction
+  Expenses:Food  $10.00
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date
+      (secondary_date))
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Secondary date with slashes
+==================
+2025/01/15=2025/01/10 Transaction
+  Expenses:Food  $10.00
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date
+      (secondary_date))
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Secondary date with periods
+==================
+2025.01.15=2025.01.10 Transaction
+  Expenses:Food  $10.00
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date
+      (secondary_date))
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Mixed date separators in secondary date
+==================
+2025-01-15=2025/01/10 Transaction
+  Expenses:Food  $10.00
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date
+      (secondary_date))
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))

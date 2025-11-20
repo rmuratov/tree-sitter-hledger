@@ -1,0 +1,173 @@
+==================
+Comment with hash
+==================
+# This is a comment
+
+---
+
+(source_file
+  (comment (comment_text)))
+
+==================
+Comment with semicolon
+==================
+; This is a comment
+
+---
+
+(source_file
+  (comment (comment_text)))
+
+==================
+Comment with asterisk
+==================
+* This is a comment
+
+---
+
+(source_file
+  (comment (comment_text)))
+
+==================
+Empty comment with hash
+==================
+#
+
+---
+
+(source_file
+  (comment
+    (comment_text)))
+
+==================
+Empty comment with semicolon
+==================
+;
+
+---
+
+(source_file
+  (comment
+    (comment_text)))
+
+==================
+Multi-line comment block
+==================
+comment
+This is a multi-line comment.
+It can span multiple lines.
+And include various text.
+end comment
+
+---
+
+(source_file
+  (comment
+    (comment_text)
+    (comment_text)
+    (comment_text)
+    (comment_text)
+    (comment_text)))
+
+==================
+Multi-line comment with text after comment keyword
+==================
+comment This starts the block
+Content of the comment.
+More content here.
+end comment
+
+---
+
+(source_file
+  (comment
+    (comment_text)
+    (comment_text)
+    (comment_text)
+    (comment_text)))
+
+==================
+Inline comment with semicolon
+==================
+2025-01-15 Purchase ; This is an inline comment
+  Expenses:Shopping  $50.00
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (inline_comment (comment_text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Inline comment with hash
+==================
+2025-01-15 Purchase # This is an inline comment
+  Expenses:Shopping  $50.00
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (inline_comment (comment_text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Multiple comments
+==================
+# Comment 1
+; Comment 2
+* Comment 3
+
+---
+
+(source_file
+  (comment (comment_text))
+  (comment (comment_text))
+  (comment (comment_text)))
+
+==================
+Blank lines
+==================
+2025-01-15 Transaction 1
+  Expenses:Food  $10.00
+  Assets:Checking
+
+2025-01-16 Transaction 2
+  Expenses:Food  $20.00
+  Assets:Checking
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account)))
+  (blank_line)
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))

@@ -1,0 +1,292 @@
+==================
+Account directive
+==================
+account Assets:Checking
+
+---
+
+(source_file
+  (directive
+    (account_directive)))
+
+==================
+Account directive with comment
+==================
+account Assets:Checking ; main checking account
+
+---
+
+(source_file
+  (directive
+    (account_directive
+      (inline_comment (comment_text)))))
+
+==================
+Account directive with subdirectives
+==================
+account Assets:Checking
+  note Main checking account
+  alias checking
+
+---
+
+(source_file
+  (directive
+    (account_directive
+      (account_subdirective)
+      (account_subdirective))))
+
+==================
+Account directive with comments in subdirectives
+==================
+account Expenses:Food
+  ; This is a comment
+  note Grocery and dining expenses
+  ; Another comment
+
+---
+
+(source_file
+  (directive
+    (account_directive
+      (comment (comment_text))
+      (account_subdirective)
+      (comment (comment_text)))))
+
+==================
+Commodity directive
+==================
+commodity USD
+
+---
+
+(source_file
+  (directive
+    (commodity_directive
+      (commodity))))
+
+==================
+Commodity directive with subdirectives
+==================
+commodity EUR
+  format 1000.00 EUR
+  note European currency
+
+---
+
+(source_file
+  (directive
+    (commodity_directive
+      (commodity)
+      (commodity_subdirective)
+      (commodity_subdirective))))
+
+==================
+Commodity directive with comment
+==================
+commodity GBP ; British Pound
+
+---
+
+(source_file
+  (directive
+    (commodity_directive
+      (commodity)
+      (inline_comment (comment_text)))))
+
+==================
+Include directive
+==================
+include accounts.journal
+
+---
+
+(source_file
+  (directive
+    (include_directive
+      (file_path))))
+
+==================
+Include directive with path
+==================
+include ./journals/2025.journal
+
+---
+
+(source_file
+  (directive
+    (include_directive
+      (file_path))))
+
+==================
+Tag directive
+==================
+tag project
+
+---
+
+(source_file
+  (directive
+    (tag_directive
+      (tag_name))))
+
+==================
+Payee directive
+==================
+payee Amazon
+
+---
+
+(source_file
+  (directive
+    (payee_directive
+      (payee_name))))
+
+==================
+Payee directive with spaces
+==================
+payee Whole Foods Market
+
+---
+
+(source_file
+  (directive
+    (payee_directive
+      (payee_name))))
+
+==================
+Decimal mark directive with period
+==================
+decimal-mark .
+
+---
+
+(source_file
+  (directive
+    (decimal_mark_directive)))
+
+==================
+Decimal mark directive with comma
+==================
+decimal-mark ,
+
+---
+
+(source_file
+  (directive
+    (decimal_mark_directive)))
+
+==================
+Alias directive
+==================
+alias checking=Assets:Checking
+
+---
+
+(source_file
+  (directive
+    (alias_directive
+      (alias_pattern)
+      (alias_replacement))))
+
+==================
+Alias directive with spaces
+==================
+alias old:account = new:account:path
+
+---
+
+(source_file
+  (directive
+    (alias_directive
+      (alias_pattern)
+      (alias_replacement))))
+
+==================
+End aliases directive
+==================
+end aliases
+
+---
+
+(source_file
+  (directive
+    (end_aliases_directive)))
+
+==================
+Apply account directive
+==================
+apply account Expenses:Business
+
+---
+
+(source_file
+  (directive
+    (apply_account_directive)))
+
+==================
+End apply account directive
+==================
+end apply account
+
+---
+
+(source_file
+  (directive
+    (end_apply_account_directive)))
+
+==================
+Year directive
+==================
+Y2025
+
+---
+
+(source_file
+  (directive
+    (year_directive)))
+
+==================
+Default commodity directive with symbol before
+==================
+D $1000.00
+
+---
+
+(source_file
+  (directive
+    (default_commodity_directive
+      (commodity)
+      (quantity))))
+
+==================
+Default commodity directive with symbol after
+==================
+D 1000.00 EUR
+
+---
+
+(source_file
+  (directive
+    (default_commodity_directive
+      (quantity)
+      (commodity))))
+
+==================
+Multiple directives
+==================
+account Assets:Checking
+commodity USD
+payee Amazon
+
+---
+
+(source_file
+  (directive
+    (account_directive))
+  (directive
+    (commodity_directive
+      (commodity)))
+  (directive
+    (payee_directive
+      (payee_name))))

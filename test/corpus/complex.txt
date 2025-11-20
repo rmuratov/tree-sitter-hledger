@@ -1,0 +1,329 @@
+==================
+Complete journal with mixed content
+==================
+; Journal for 2025
+# Account definitions
+account Assets:Checking
+account Expenses:Food
+
+commodity USD
+
+Y2025
+
+2025-01-15 * (INV-001) Grocery shopping | weekly groceries
+  Expenses:Food  $50.00 ; food shopping
+  Assets:Checking
+
+; Another transaction
+2025-01-16 ! Pending payment
+  Expenses:Utilities  $100.00
+  Liabilities:CreditCard
+
+---
+
+(source_file
+  (comment (comment_text))
+  (comment (comment_text))
+  (directive
+    (account_directive))
+  (directive
+    (account_directive))
+  (blank_line)
+  (directive
+    (commodity_directive
+      (commodity)))
+  (blank_line)
+  (directive
+    (year_directive))
+  (blank_line)
+  (transaction
+    (date)
+    (status)
+    (code)
+    (description
+      (payee)
+      (note))
+    (inline_comment (comment_text))
+    (posting
+      (account)
+      (amount (commodity) (quantity))
+      (inline_comment (comment_text)))
+    (posting
+      (account)))
+  (blank_line)
+  (comment (comment_text))
+  (transaction
+    (date)
+    (status)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Transaction with all features
+==================
+2025-01-15=2025-01-10 * (CODE) Payee | Note ; transaction comment
+  * Assets:Checking  $100.00 = $500.00 ; posting comment
+  ! (Budget:Food)  $50.00
+  [Budget:Savings]  $50.00
+  Expenses:Food
+
+---
+
+(source_file
+  (transaction
+    (date
+      (secondary_date))
+    (status)
+    (code)
+    (description
+      (payee)
+      (note))
+    (inline_comment (comment_text))
+    (posting
+      (status)
+      (account)
+      (amount (commodity) (quantity))
+      (balance_assertion (amount (commodity) (quantity)))
+      (inline_comment (comment_text)))
+    (posting
+      (status)
+      (account (virtual_account))
+      (amount (commodity) (quantity)))
+    (posting
+      (account (balanced_virtual_account))
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Multi-currency transaction with prices
+==================
+2025-01-15 Investment purchase
+  Assets:Stocks  10 AAPL @ $150.00
+  Assets:Bitcoin  0.5 BTC @@ €20000.00
+  Assets:Checking  -$1500.00
+  Assets:EuroAccount  -€20000.00
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount
+        (quantity)
+        (commodity)
+        (unit_price (commodity) (quantity))))
+    (posting
+      (account)
+      (amount
+        (quantity)
+        (commodity)
+        (total_price (commodity) (quantity))))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))))
+
+==================
+Directives with apply account
+==================
+apply account Expenses:Business
+
+2025-01-15 Office supplies
+  Office  $50.00
+  Assets:Checking
+
+end apply account
+
+2025-01-16 Personal expense
+  Expenses:Personal  $25.00
+  Assets:Checking
+
+---
+
+(source_file
+  (directive
+    (apply_account_directive))
+  (blank_line)
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account)))
+  (blank_line)
+  (directive
+    (end_apply_account_directive))
+  (blank_line)
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Alias directives
+==================
+alias old=Assets:Checking
+alias groceries=Expenses:Food
+
+2025-01-15 Shopping
+  groceries  $50.00
+  old
+
+end aliases
+
+---
+
+(source_file
+  (directive
+    (alias_directive
+      (alias_pattern)
+      (alias_replacement)))
+  (directive
+    (alias_directive
+      (alias_pattern)
+      (alias_replacement)))
+  (blank_line)
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account)))
+  (blank_line)
+  (directive
+    (end_aliases_directive)))
+
+==================
+Account directive with complex subdirectives
+==================
+account Assets:Checking
+  note Main checking account
+  alias checking
+  ; This is a comment within the directive
+  default
+
+---
+
+(source_file
+  (directive
+    (account_directive
+      (account_subdirective)
+      (account_subdirective)
+      (comment (comment_text))
+      (account_subdirective))))
+
+==================
+Commodity directive with format
+==================
+commodity EUR
+  format 1.000,00 EUR
+  default
+  ; European currency
+
+---
+
+(source_file
+  (directive
+    (commodity_directive
+      (commodity)
+      (commodity_subdirective)
+      (commodity_subdirective)
+      (comment (comment_text)))))
+
+==================
+Mixed directives and transactions
+==================
+account Assets:Checking
+commodity USD
+P 2025-01-15 EUR $1.20
+
+2025-01-15 Transaction
+  Assets:Checking  $100.00
+  Income:Salary
+
+include additional.journal
+
+---
+
+(source_file
+  (directive
+    (account_directive))
+  (directive
+    (commodity_directive
+      (commodity)))
+  (price_directive
+    (commodity)
+    (commodity)
+    (quantity))
+  (blank_line)
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account)))
+  (blank_line)
+  (directive
+    (include_directive
+      (file_path))))
+
+==================
+Transaction with only date
+==================
+2025-01-15
+  Assets:Checking  $100.00
+  Income:Salary
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
+
+==================
+Posting without amount inference
+==================
+2025-01-15 Split income
+  Income:Salary  -$5000.00
+  Assets:Checking  $3000.00
+  Assets:Savings
+
+---
+
+(source_file
+  (transaction
+    (date)
+    (description (text))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account)
+      (amount (commodity) (quantity)))
+    (posting
+      (account))))
