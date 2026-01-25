@@ -1,0 +1,77 @@
+================================================================================
+Auto posting with constant amount
+================================================================================
+= expenses:food
+    liabilities:charity   $-1
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive_auto_posting
+    (query)
+    (posting
+      (account)
+      (amount
+        (commodity)
+        (negative)
+        (quantity)))))
+
+================================================================================
+Auto posting with multiply amounts
+================================================================================
+= expenses:gifts
+    assets:checking:gifts  *-1
+    assets:checking         *1
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive_auto_posting
+    (query)
+    (posting
+      (account)
+      (amount
+        (multiplier)
+        (negative)
+        (quantity)))
+    (posting
+      (account)
+      (amount
+        (multiplier)
+        (quantity)))))
+
+================================================================================
+Auto posting with multiply and commodity replacement
+================================================================================
+= expenses:food
+    liabilities:tax   *$2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive_auto_posting
+    (query)
+    (posting
+      (account)
+      (amount
+        (multiplier)
+        (commodity)
+        (quantity)))))
+
+================================================================================
+Auto posting with quoted query
+================================================================================
+= 'expenses:food drinks'
+    liabilities:charity   $-1
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive_auto_posting
+    (query)
+    (posting
+      (account)
+      (amount
+        (commodity)
+        (negative)
+        (quantity)))))

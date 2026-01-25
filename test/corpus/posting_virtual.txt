@@ -1,0 +1,97 @@
+================================================================================
+Unbalanced virtual posting
+================================================================================
+2026-01-24
+    assets:checking      $-50
+    expenses:food         $50
+    (budget:food)        $-50
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (header
+      (date))
+    (posting
+      (account)
+      (amount
+        (commodity)
+        (negative)
+        (quantity)))
+    (posting
+      (account)
+      (amount
+        (commodity)
+        (quantity)))
+    (posting_virtual
+      (account)
+      (amount
+        (commodity)
+        (negative)
+        (quantity)))))
+
+================================================================================
+Balanced virtual posting
+================================================================================
+2026-01-24
+    assets:checking      $-50
+    expenses:food         $50
+    [budget:food]        $-50
+    [budget:available]    $50
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (header
+      (date))
+    (posting
+      (account)
+      (amount
+        (commodity)
+        (negative)
+        (quantity)))
+    (posting
+      (account)
+      (amount
+        (commodity)
+        (quantity)))
+    (posting_virtual_balanced
+      (account)
+      (amount
+        (commodity)
+        (negative)
+        (quantity)))
+    (posting_virtual_balanced
+      (account)
+      (amount
+        (commodity)
+        (quantity)))))
+
+================================================================================
+Amountless unbalanced virtual posting
+================================================================================
+2026-01-24
+    assets:checking      $-50
+    expenses:food         $50
+    (tracking:food)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (header
+      (date))
+    (posting
+      (account)
+      (amount
+        (commodity)
+        (negative)
+        (quantity)))
+    (posting
+      (account)
+      (amount
+        (commodity)
+        (quantity)))
+    (posting_virtual
+      (account))))

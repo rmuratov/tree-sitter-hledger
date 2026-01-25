@@ -1,0 +1,60 @@
+================================================================================
+Simple periodic transaction
+================================================================================
+~ monthly
+    expenses:rent          $2000
+    assets:bank:checking
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive_periodic_transaction
+    (period_expression)
+    (posting
+      (account)
+      (amount
+        (commodity)
+        (quantity)))
+    (posting
+      (account))))
+
+================================================================================
+Periodic transaction with date range in period expression
+================================================================================
+~ monthly from 2023-04-15 to 2023-06-16
+    expenses:utilities          $400
+    assets:bank:checking
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive_periodic_transaction
+    (period_expression)
+    (posting
+      (account)
+      (amount
+        (commodity)
+        (quantity)))
+    (posting
+      (account))))
+
+================================================================================
+Periodic transaction with description
+================================================================================
+~ every 2 months  in 2023, we will review
+    assets:bank:checking   $1500
+    income:salary
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive_periodic_transaction
+    (period_expression)
+    (description)
+    (posting
+      (account)
+      (amount
+        (commodity)
+        (quantity)))
+    (posting
+      (account))))

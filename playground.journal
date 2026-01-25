@@ -1,0 +1,337 @@
+; hledger --file playground.journal
+
+; directive_periodic_transaction corpus tests
+~ monthly
+    pr1:expenses:rent          $2000
+    pr1:assets:bank:checking
+
+~ monthly from 2023-04-15 to 2023-06-16
+    pr2:expenses:utilities          $400
+    pr2:assets:bank:checking
+
+~ every 2 months  in 2023, we will review
+    pr3:assets:bank:checking   $1500
+    pr3:income:salary
+
+; posting_virtual corpus tests
+2026-01-24
+    virt1:assets:checking      $-50
+    virt1:expenses:food         $50
+    (virt1:budget:food)        $-50
+
+2026-01-24
+    virt2:assets:checking      $-50
+    virt2:expenses:food         $50
+    [virt2:budget:food]        $-50
+    [virt2:budget:available]    $50
+
+2026-01-24
+    virt3:assets:checking      $-50
+    virt3:expenses:food         $50
+    (virt3:tracking:food)
+
+; directive_auto_posting corpus tests
+= ap1:expenses:food
+    ap1:liabilities:charity   $-1
+
+= ap2:expenses:gifts
+    ap2:assets:checking:gifts  *-1
+    ap2:assets:checking         *1
+
+= ap3:expenses:food
+    ap3:liabilities:tax   *$2
+
+= 'ap4:expenses:food drinks'
+    ap4:liabilities:charity   $-1
+
+; directive_alias corpus tests
+alias alias1:checking=alias1:bank:main
+alias alias2:checking = alias2:bank:main
+alias /\./=:
+alias /\./ = :
+alias /^([^:]+):[^:]+/=\1
+end aliases
+
+; directive_tag corpus tests
+tag item-id
+tag type
+
+; directive_include corpus tests
+include include_stub.journal
+
+; directive_payee corpus tests
+payee Whole Foods
+payee Whole Foods    ; a comment
+payee ""
+
+; directive_price corpus tests
+P 2009-01-01 € $1.35
+P 2009/01/01 € $1.35
+P 2009.01.01 € $1.35
+P 2009/1/1 € $1.35
+P 2010-01-01 EUR $1.40
+P 2010-01-01 $ 1.40 EUR
+
+; directive_decimal_mark corpus tests
+decimal-mark .
+
+; directive_commodity corpus tests
+commodity $1000.00
+commodity 1.000,00 EUR
+commodity 1 000 000.0000
+commodity 1000. AAAA
+commodity 1.0000 "AAAA 2023"
+commodity $
+commodity INR
+commodity "AAAA 2023"
+commodity $1000.00    ; some comment
+commodity $1000.00    ; type:currency
+
+; directive_account corpus tests
+account dir1:assets:bank:checking
+account dir2:assets:bank:checking    ; same-line comment
+account dir3:assets:bank:checking    ; acctnum:12345
+account dir4:assets:bank:checking
+  ; next-line comment
+account dir5:assets:bank:checking    ; same-line comment
+  ; next-line comment
+account dir6:assets    ; type:A
+2026-01-01
+
+2026-01-01    !     Transaction
+
+2026-01-01 = 2026-01-02     *     Transaction
+   Expense:Food  100 USD
+   Assets:Checking
+
+2026-01-24=01-25 ! (12345) Barbershop | Haircut ; very good haircut, mood:best
+    ; my cool comment lol:tag
+    ; my another cool comment, let's have more tags here tag-1:wow, tag-2:cool
+    Expenses:Services  2500.00 RSD ; i love commenting things quality:good
+    * Expenses:Tips      2500.00 RSD
+    Assets:Raiffeisen  -5000.00 RSD = -5000.00 RSD ; yesss, date:2026-01-26
+
+
+; lol:tag
+
+comment
+Hahaha jajajaja:kakaka
+end comment
+
+2026-01-24 Barbershop sjdklsdj; comment
+  Assets  ; comment lll:wow
+
+2026-01-24 (1234 code my code oh yeah) Transaction
+
+2026-01-24 Payee    |    Note
+
+2026-01-24 |
+
+2026-01-24
+    Assets Checking Personal  1000
+    Assets
+
+2026-01-24
+    Мой крутой аккаунт  1000
+    Assets
+
+2026-01-24
+    Мой крутой аккаунт:И его подвид  1000
+    Assets
+
+; posting corpus tests
+2026-01-24
+    * Assets:Checking  1000
+    Expenses
+
+2026-01-24
+    ! Assets:Checking  1000
+    Expenses
+
+2026-01-24
+    Assets:Checking  1000  ; inline comment
+    Expenses
+
+2026-01-24
+    * Assets:Checking  1000  ; cleared posting with comment
+    Expenses
+
+2026-01-24
+    Assets:Checking  -1000
+    Expenses:Food     1000
+
+2026-01-24
+    Assets:Checking   100
+    Assets:Savings    200
+    Expenses         -300
+
+; amount corpus tests
+2026-01-24
+    Assets  $1
+    Expenses
+
+2026-01-24
+    Assets  $ 1
+    Expenses
+
+2026-01-24
+    Assets  4000 AAPL
+    Expenses
+
+2026-01-24
+    Assets  3 "green apples"
+    Expenses
+
+2026-01-24
+    Assets  -$1
+    Expenses
+
+2026-01-24
+    Assets  $-1
+    Expenses
+
+2026-01-24
+    Assets  +1
+    Expenses
+
+2026-01-24
+    Assets  +$1
+    Expenses
+
+2026-01-24
+    Assets  + $1
+    Expenses
+
+2026-01-24
+    Assets  $+1
+    Expenses
+
+2026-01-24
+    Assets  $-      1
+    Expenses
+
+; cost corpus tests
+2026-01-01 buy euros
+    cost1:dollars
+    cost1:euros         €100 @ $1.23
+
+2026-01-01 buy euros
+    cost2:dollars
+    cost2:euros         €100 @@ $123
+
+2026-01-01 buy euros
+    cost3:dollars
+    cost3:euros         100 EUR @ 1.23 USD
+
+2026-01-01 buy euros
+    cost4:dollars      $-123
+    cost4:euros         €100 @ $1.23 = €100
+
+2026-01-24
+    Assets  1E-6
+    Expenses
+
+2026-01-24
+    Assets  EUR 1E3
+    Expenses
+
+2026-01-24
+    Assets  1.23
+    Expenses
+
+2026-01-24
+    Assets  1,23
+    Expenses
+
+2026-01-24
+    Assets  10.
+    Expenses
+
+2026-01-24
+    Assets  $1,000,000.00
+    Expenses
+
+2026-01-24
+    Assets  EUR 2.000.000,00
+    Expenses
+
+2026-01-24
+    Assets  INR 9,99,99,999.00
+    Expenses
+
+2026-01-24
+    Assets  1 000 000.00
+    Expenses
+
+; transaction corpus tests
+2008/01/01 income
+  assets:bank:checking   $1
+  income:salary         $-1
+
+2026-01-24 * (REF123) Grocery shopping ; receipt lost
+    Expenses:Food  50 USD
+    Assets:Cash  -50 USD
+
+2026-01-24 Groceries
+    ; shopping receipt
+    Expenses:Food  50
+    Assets
+
+2026-01-01 First transaction
+    Assets  100
+    Expenses
+
+2026-01-02 Second transaction
+    Assets  200
+    Expenses
+
+; balance assertion corpus tests
+2019-01-01
+    ba3:a   = $1 @ €2
+    ba3:b
+2013/1/1
+    ba1:a   $1 = $1
+    ba1:b      = $-1
+
+2026-01-24
+    ba2:assets  $1 == $1
+    ba2:exp    $-1
+
+2026-01-01
+    equity:bal-start  -$20
+    bal:checking       $10
+    bal:savings        $10
+    bal                 $0 =* $20
+
+2019/1/1
+    equity:inv-start
+    inv:checking  $10
+    inv:savings   $10
+    inv            $0 ==* $20
+
+; tag corpus tests
+; some-tag:
+; tag1: this is tag1's value
+; tag1:value 1, tag2:value 2, comment text
+; some text tag1:value 1, more text
+
+2026-01-24 Groceries ; some-tag:
+    tag1:expenses  $1
+    tag1:assets
+
+2026-01-24 Groceries ; receipt:lost
+    tag2:expenses  $1
+    tag2:assets
+
+2026-01-24 Groceries ; receipt lost, mood:good
+    tag3:expenses  $1
+    tag3:assets
+
+2026-01-24 Groceries
+    tag4:expenses  $1  ; postingtag:
+    tag4:assets
+
+2026-01-24 Groceries
+    ; tag1: value 1
+    tag5:expenses  $1
+    tag5:assets

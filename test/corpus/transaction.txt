@@ -1,0 +1,132 @@
+================================================================================
+Simple transaction
+================================================================================
+2026-01-24
+    Assets:Checking  1000
+    Expenses
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (header
+      (date))
+    (posting
+      (account)
+      (amount
+        (quantity)))
+    (posting
+      (account))))
+
+================================================================================
+Transaction with description and postings
+================================================================================
+2008/01/01 income
+  assets:bank:checking   $1
+  income:salary         $-1
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (header
+      (date)
+      (description))
+    (posting
+      (account)
+      (amount
+        (commodity)
+        (quantity)))
+    (posting
+      (account)
+      (amount
+        (commodity)
+        (negative)
+        (quantity)))))
+
+================================================================================
+Transaction with all optional header fields
+================================================================================
+2026-01-24 * (REF123) Grocery shopping ; receipt lost
+    Expenses:Food  50 USD
+    Assets:Cash  -50 USD
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (header
+      (date)
+      (status_cleared)
+      (code)
+      (description)
+      (comment))
+    (posting
+      (account)
+      (amount
+        (quantity)
+        (commodity)))
+    (posting
+      (account)
+      (amount
+        (negative)
+        (quantity)
+        (commodity)))))
+
+================================================================================
+Transaction with body comment
+================================================================================
+2026-01-24 Groceries
+    ; shopping receipt
+    Expenses:Food  50
+    Assets
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (header
+      (date)
+      (description))
+    (comment)
+    (posting
+      (account)
+      (amount
+        (quantity)))
+    (posting
+      (account))))
+
+================================================================================
+Multiple transactions
+================================================================================
+2026-01-01 First transaction
+    Assets  100
+    Expenses
+
+2026-01-02 Second transaction
+    Assets  200
+    Expenses
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (header
+      (date)
+      (description))
+    (posting
+      (account)
+      (amount
+        (quantity)))
+    (posting
+      (account)))
+  (transaction
+    (header
+      (date)
+      (description))
+    (posting
+      (account)
+      (amount
+        (quantity)))
+    (posting
+      (account))))

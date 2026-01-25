@@ -1,0 +1,195 @@
+================================================================================
+A posting
+================================================================================
+2026-01-24
+    Assets:Checking  1000
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (header
+      (date))
+    (posting
+      (account)
+      (amount
+        (quantity)))))
+
+================================================================================
+Amountless posting
+================================================================================
+2026-01-24
+    Assets:Checking  1000
+    Expenses
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (header
+      (date))
+    (posting
+      (account)
+      (amount
+        (quantity)))
+    (posting
+      (account))))
+
+================================================================================
+Posting with cleared status
+================================================================================
+2026-01-24
+    * Assets:Checking  1000
+    Expenses
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (header
+      (date))
+    (posting
+      (status_cleared)
+      (account)
+      (amount
+        (quantity)))
+    (posting
+      (account))))
+
+================================================================================
+Posting with pending status
+================================================================================
+2026-01-24
+    ! Assets:Checking  1000
+    Expenses
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (header
+      (date))
+    (posting
+      (status_pending)
+      (account)
+      (amount
+        (quantity)))
+    (posting
+      (account))))
+
+================================================================================
+Posting with inline comment
+================================================================================
+2026-01-24
+    Assets:Checking  1000  ; inline comment
+    Expenses
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (header
+      (date))
+    (posting
+      (account)
+      (amount
+        (quantity))
+      (comment))
+    (posting
+      (account))))
+
+================================================================================
+Posting with status and inline comment
+================================================================================
+2026-01-24
+    * Assets:Checking  1000  ; cleared posting with comment
+    Expenses
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (header
+      (date))
+    (posting
+      (status_cleared)
+      (account)
+      (amount
+        (quantity))
+      (comment))
+    (posting
+      (account))))
+
+================================================================================
+Posting with comment directly after amount (no space)
+================================================================================
+2026-01-24
+    Assets:Cash  -200.00 USD; a note
+    Expenses
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (header
+      (date))
+    (posting
+      (account)
+      (amount
+        (negative)
+        (quantity)
+        (commodity))
+      (comment))
+    (posting
+      (account))))
+
+================================================================================
+Posting with negative amount
+================================================================================
+2026-01-24
+    Assets:Checking  -1000
+    Expenses:Food     1000
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (header
+      (date))
+    (posting
+      (account)
+      (amount
+        (negative)
+        (quantity)))
+    (posting
+      (account)
+      (amount
+        (quantity)))))
+
+================================================================================
+Multiple postings
+================================================================================
+2026-01-24
+    Assets:Checking   100
+    Assets:Savings    200
+    Expenses         -300
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (header
+      (date))
+    (posting
+      (account)
+      (amount
+        (quantity)))
+    (posting
+      (account)
+      (amount
+        (quantity)))
+    (posting
+      (account)
+      (amount
+        (negative)
+        (quantity)))))

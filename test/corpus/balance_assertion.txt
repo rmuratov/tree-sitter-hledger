@@ -1,0 +1,169 @@
+================================================================================
+Single-commodity assertion (=)
+================================================================================
+2013/1/1
+    a   $1 = $1
+    b      = $-1
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (header
+      (date))
+    (posting
+      (account)
+      (amount
+        (commodity)
+        (quantity))
+      (assertion
+        (assertion_operator)
+        (amount
+          (commodity)
+          (quantity))))
+    (posting
+      (account)
+      (assertion
+        (assertion_operator)
+        (amount
+          (commodity)
+          (negative)
+          (quantity))))))
+
+================================================================================
+Sole commodity assertion (==)
+================================================================================
+2026-01-24
+    Assets  $1 == $1
+    Expenses  $-1
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (header
+      (date))
+    (posting
+      (account)
+      (amount
+        (commodity)
+        (quantity))
+      (assertion
+        (assertion_operator)
+        (amount
+          (commodity)
+          (quantity))))
+    (posting
+      (account)
+      (amount
+        (commodity)
+        (negative)
+        (quantity)))))
+
+================================================================================
+Balance assignment with cost
+================================================================================
+2019-01-01
+    ba3:a   = $1 @ €2
+    ba3:b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (header
+      (date))
+    (posting
+      (account)
+      (assertion
+        (assertion_operator)
+        (amount
+          (commodity)
+          (quantity)))
+      (cost
+        (cost_operator)
+        (amount
+          (commodity)
+          (quantity))))
+    (posting
+      (account))))
+
+================================================================================
+Subaccount-inclusive assertion (=*)
+================================================================================
+2026-01-01
+    assets:checking  $10
+    assets:savings   $10
+    equity:start    -$20
+    assets            $0 =* $20
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (header
+      (date))
+    (posting
+      (account)
+      (amount
+        (commodity)
+        (quantity)))
+    (posting
+      (account)
+      (amount
+        (commodity)
+        (quantity)))
+    (posting
+      (account)
+      (amount
+        (negative)
+        (commodity)
+        (quantity)))
+    (posting
+      (account)
+      (amount
+        (commodity)
+        (quantity))
+      (assertion
+        (assertion_operator)
+        (amount
+          (commodity)
+          (quantity))))))
+
+================================================================================
+Subaccount-inclusive sole commodity assertion (==*)
+================================================================================
+2019/1/1
+    equity:start
+    assets:checking  $10
+    assets:savings   $10
+    assets            $0 ==* $20
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (header
+      (date))
+    (posting
+      (account))
+    (posting
+      (account)
+      (amount
+        (commodity)
+        (quantity)))
+    (posting
+      (account)
+      (amount
+        (commodity)
+        (quantity)))
+    (posting
+      (account)
+      (amount
+        (commodity)
+        (quantity))
+      (assertion
+        (assertion_operator)
+        (amount
+          (commodity)
+          (quantity))))))

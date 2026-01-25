@@ -1,0 +1,116 @@
+================================================================================
+Unit cost (@)
+================================================================================
+2026-01-01 buy euros
+    assets:dollars
+    assets:euros        €100 @ $1.23
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (header
+      (date)
+      (description))
+    (posting
+      (account))
+    (posting
+      (account)
+      (amount
+        (commodity)
+        (quantity))
+      (cost
+        (cost_operator)
+        (amount
+          (commodity)
+          (quantity))))))
+
+================================================================================
+Total cost (@@)
+================================================================================
+2026-01-01 buy euros
+    assets:dollars
+    assets:euros        €100 @@ $123
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (header
+      (date)
+      (description))
+    (posting
+      (account))
+    (posting
+      (account)
+      (amount
+        (commodity)
+        (quantity))
+      (cost
+        (cost_operator)
+        (amount
+          (commodity)
+          (quantity))))))
+
+================================================================================
+Cost with balance assertion
+================================================================================
+2026-01-01 buy euros
+    assets:dollars     $-123
+    assets:euros        €100 @ $1.23 = €100
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (header
+      (date)
+      (description))
+    (posting
+      (account)
+      (amount
+        (commodity)
+        (negative)
+        (quantity)))
+    (posting
+      (account)
+      (amount
+        (commodity)
+        (quantity))
+      (cost
+        (cost_operator)
+        (amount
+          (commodity)
+          (quantity)))
+      (assertion
+        (assertion_operator)
+        (amount
+          (commodity)
+          (quantity))))))
+
+================================================================================
+Cost with right-side commodity
+================================================================================
+2026-01-01 buy euros
+    assets:dollars
+    assets:euros        100 EUR @ 1.23 USD
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (header
+      (date)
+      (description))
+    (posting
+      (account))
+    (posting
+      (account)
+      (amount
+        (quantity)
+        (commodity))
+      (cost
+        (cost_operator)
+        (amount
+          (quantity)
+          (commodity))))))
