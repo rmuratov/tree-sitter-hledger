@@ -636,6 +636,10 @@
     }
   },
   {
+    "type": "\n",
+    "named": false
+  },
+  {
     "type": "(",
     "named": false
   },
@@ -696,6 +700,10 @@
     "named": true
   },
   {
+    "type": "comment",
+    "named": false
+  },
+  {
     "type": "commodity",
     "named": false
   },
@@ -713,6 +721,10 @@
   },
   {
     "type": "end aliases",
+    "named": false
+  },
+  {
+    "type": "end comment",
     "named": false
   },
   {

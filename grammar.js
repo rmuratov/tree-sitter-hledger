@@ -13,10 +13,6 @@ export default grammar({
   // No automatic whitespace skipping — hledger is whitespace-sensitive
   extras: $ => [],
 
-  externals: $ => [
-    $._block_comment_content, // handles multiline "comment...end comment" block
-  ],
-
   conflicts: $ => [
     // after amount, whitespace could be cost/assertion prefix OR comment/newline
     [$._posting_amounts],
@@ -33,7 +29,7 @@ export default grammar({
       choice(
         $.transaction,
         seq($.comment, /\n/),
-        alias($._block_comment_content, $.comment), // block comment → comment node
+        alias($.block_comment, $.comment),
         $.directive_account,
         $.directive_alias,
         $.directive_end_aliases,
@@ -66,6 +62,13 @@ export default grammar({
         ),
       ),
     ),
+
+    // Block comment: "comment\n ... end comment\n"
+    // Modelled after tree-sitter-ledger's block() helper — no external scanner needed.
+    // Each body line is matched by optional(seq(optional(_ws), /.*/)) + '\n'.
+    // The lexer prioritises the specific token('end comment') over the /.*/ body regex
+    // when the parser is in a state where the end marker is valid.
+    block_comment: $ => blockRule($, 'comment'),
 
     tag: $ => prec.right(seq($.tag_name, ':', optional($.tag_value))),
     tag_name: $ => prec(1, /[a-zA-Z][a-zA-Z0-9_-]*/),
@@ -101,16 +104,16 @@ export default grammar({
     ),
 
     // Indented comment line inside a transaction body
-    _body_comment: $ => seq(/[ \t]+/, $.comment, /\n/),
+    _body_comment: $ => seq($._ws, $.comment, /\n/),
 
     header: $ => seq(
       $.date,
       optional($.secondary_date),
       optional(
         seq(
-          /[ \t]+/,
-          optional(seq(choice($.status_cleared, $.status_pending), optional(/[ \t]+/))),
-          optional(seq($.code, /[ \t]+/)),
+          $._ws,
+          optional(seq(choice($.status_cleared, $.status_pending), optional($._ws))),
+          optional(seq($.code, $._ws)),
           optional($.description),
           optional($.comment),
         ),
@@ -127,52 +130,33 @@ export default grammar({
       seq($.payee, /[ \t]*\|[ \t]*/, $.note),  // payee | note form
       seq($.payee, /[ \t]*\|[ \t]*/),          // payee | (no note)
       /\|[^\n;]*/,                              // | or |note (empty payee)
-      /[^ \t*!(|\n;][^|\n;]*/,                     // plain; must not start with space, * ! ( (status/code markers)
+      /[^ \t*!(|\n;][^|\n;]*/,                 // plain; must not start with space, * ! ( (status/code markers)
     ),
 
-    payee: $ => /[^ \t*!(|\n;][^|\n;]*/,  // must not start with space, * ! ( (status/code markers)
+    payee: $ => /[^ \t*!(|\n;][^|\n;]*/,
     note: $ => /[^\n;]+/,
 
     // =========================================================
     // POSTINGS
     // =========================================================
 
-    posting: $ => seq(
-      /[ \t]+/,
-      optional(seq(choice($.status_cleared, $.status_pending), /[ \t]+/)),
+    posting: $ => postingRule($,
       $.account,
-      optional(seq(/[ \t]+/, $._posting_amounts)),
-      optional(seq(optional(/[ \t]+/), $.comment)),
-      /\n/,
     ),
 
-    posting_virtual: $ => seq(
-      /[ \t]+/,
-      optional(seq(choice($.status_cleared, $.status_pending), /[ \t]+/)),
-      '(',
-      $.account,
-      ')',
-      optional(seq(/[ \t]+/, $._posting_amounts)),
-      optional(seq(optional(/[ \t]+/), $.comment)),
-      /\n/,
+    posting_virtual: $ => postingRule($,
+      seq('(', $.account, ')'),
     ),
 
-    posting_virtual_balanced: $ => seq(
-      /[ \t]+/,
-      optional(seq(choice($.status_cleared, $.status_pending), /[ \t]+/)),
-      '[',
-      $.account,
-      ']',
-      optional(seq(/[ \t]+/, $._posting_amounts)),
-      optional(seq(optional(/[ \t]+/), $.comment)),
-      /\n/,
+    posting_virtual_balanced: $ => postingRule($,
+      seq('[', $.account, ']'),
     ),
 
     // Hidden: lifts amount/cost/assertion as direct children of the posting node
     _posting_amounts: $ => choice(
-      seq($.amount, optional(seq(/[ \t]+/, $.cost)), optional(seq(/[ \t]+/, $.assertion))),
-      seq($.cost, optional(seq(/[ \t]+/, $.assertion))),
-      seq($.assertion, optional(seq(/[ \t]+/, $.cost))), // balance assignment: = $1 @ €2
+      seq($.amount, optional(seq($._ws, $.cost)), optional(seq($._ws, $.assertion))),
+      seq($.cost, optional(seq($._ws, $.assertion))),
+      seq($.assertion, optional(seq($._ws, $.cost))), // balance assignment: = $1 @ €2
     ),
 
     // Account name: chars except whitespace-like and special chars
@@ -190,30 +174,30 @@ export default grammar({
         // Sign before left-commodity: -$1, +EUR 100, + $1
         seq(
           choice($.negative, $.positive),
-          optional(/[ \t]+/),
+          optional($._ws),
           $.commodity,
-          optional(/[ \t]+/),
-          optional(seq(choice($.negative, $.positive), optional(/[ \t]+/))),
+          optional($._ws),
+          optional(seq(choice($.negative, $.positive), optional($._ws))),
           $.quantity,
         ),
         // Left-commodity with optional inner sign: $1, EUR 100, $-1, $ 1, $-      1
         seq(
           $.commodity,
-          optional(/[ \t]+/),
-          optional(seq(choice($.negative, $.positive), optional(/[ \t]+/))),
+          optional($._ws),
+          optional(seq(choice($.negative, $.positive), optional($._ws))),
           $.quantity,
         ),
         // Sign before bare quantity, optional right-commodity: -1, +1, -1 USD
         seq(
           choice($.negative, $.positive),
-          optional(/[ \t]+/),
+          optional($._ws),
           $.quantity,
-          optional(seq(/[ \t]+/, $.commodity)),
+          optional(seq($._ws, $.commodity)),
         ),
         // Bare quantity, optional right-commodity: 1, 1 USD, 1 000 000.00
         seq(
           $.quantity,
-          optional(seq(/[ \t]+/, $.commodity)),
+          optional(seq($._ws, $.commodity)),
         ),
       ),
     ),
@@ -238,10 +222,10 @@ export default grammar({
       ),
     ),
 
-    cost: $ => seq($.cost_operator, optional(/[ \t]+/), $.amount),
+    cost: $ => seq($.cost_operator, optional($._ws), $.amount),
     cost_operator: $ => token(choice('@@', '@')),
 
-    assertion: $ => seq($.assertion_operator, optional(/[ \t]+/), $.amount),
+    assertion: $ => seq($.assertion_operator, optional($._ws), $.amount),
     assertion_operator: $ => token(choice('==*', '=*', '==', '=')),
 
     // =========================================================
@@ -250,16 +234,16 @@ export default grammar({
 
     directive_account: $ => seq(
       'account',
-      /[ \t]+/,
+      $._ws,
       $.account,
-      optional(seq(/[ \t]+/, $.comment)),
+      optional(seq($._ws, $.comment)),
       /\n/,
-      repeat(seq(/[ \t]+/, $.comment, /\n/)), // indented next-line comments
+      repeat(seq($._ws, $.comment, /\n/)), // indented next-line comments
     ),
 
     directive_alias: $ => seq(
       'alias',
-      /[ \t]+/,
+      $._ws,
       $.alias_base,
       /[ \t]*=[ \t]*/,
       $.alias_substitute,
@@ -273,7 +257,7 @@ export default grammar({
 
     directive_auto_posting: $ => seq(
       '=',
-      /[ \t]+/,
+      $._ws,
       $.query,
       /\n/,
       repeat(choice($.posting, $.posting_virtual, $.posting_virtual_balanced)),
@@ -288,32 +272,32 @@ export default grammar({
 
     directive_commodity: $ => seq(
       'commodity',
-      /[ \t]+/,
+      $._ws,
       choice($.amount, $.commodity),
-      optional(seq(/[ \t]+/, $.comment)),
+      optional(seq($._ws, $.comment)),
       /\n/,
       repeat($.commodity_format),
     ),
 
     commodity_format: $ => seq(
-      /[ \t]+/,
+      $._ws,
       'format',
-      /[ \t]+/,
+      $._ws,
       choice($.amount, $.commodity),
-      optional(seq(/[ \t]+/, $.comment)),
+      optional(seq($._ws, $.comment)),
       /\n/,
     ),
 
     directive_decimal_mark: $ => seq(
       'decimal-mark',
-      /[ \t]+/,
+      $._ws,
       /[.,]/,
       /\n/,
     ),
 
     directive_include: $ => seq(
       'include',
-      /[ \t]+/,
+      $._ws,
       $.path,
       /\n/,
     ),
@@ -322,7 +306,7 @@ export default grammar({
 
     directive_payee: $ => seq(
       'payee',
-      /[ \t]+/,
+      $._ws,
       $.payee,
       optional($.comment),
       /\n/,
@@ -330,9 +314,9 @@ export default grammar({
 
     directive_periodic_transaction: $ => seq(
       '~',
-      /[ \t]+/,
+      $._ws,
       $.period_expression,
-      optional(seq(/[ \t]+/, $.description)),
+      optional(seq($._ws, $.description)),
       /\n/,
       repeat(choice($.posting, $.posting_virtual, $.posting_virtual_balanced)),
     ),
@@ -342,20 +326,69 @@ export default grammar({
 
     directive_price: $ => seq(
       'P',
-      /[ \t]+/,
+      $._ws,
       $.date,
-      /[ \t]+/,
+      $._ws,
       $.commodity,
-      /[ \t]+/,
+      $._ws,
       $.amount,
       /\n/,
     ),
 
     directive_tag: $ => seq(
       'tag',
-      /[ \t]+/,
+      $._ws,
       $.tag_name,
       /\n/,
     ),
+
+    // =========================================================
+    // WHITESPACE (inline — vanishes from the tree)
+    // =========================================================
+
+    _ws: $ => /[ \t]+/,
   },
 });
+
+// =========================================================
+// HELPERS
+// =========================================================
+
+/**
+ * Block directive rule (comment, test, …) — no external scanner needed.
+ *
+ * Matches:
+ *   <keyword>[<ws> <anything>]\n
+ *   (<line-content>\n)*
+ *   end <keyword>\n
+ *
+ * Body lines are captured by `optional(seq(optional(_ws), /.* /)) + '\n'`.
+ * The lexer gives `token('end <keyword>')` priority over the general `/.*‌/`
+ * regex in the repeat body because specific string tokens beat regexes of
+ * equal length when both are valid in the current parser state.
+ */
+function blockRule($, keyword) {
+  return seq(
+    token(keyword),
+    optional(seq($._ws, /.*/)),
+    '\n',
+    repeat(seq(optional(seq(optional($._ws), /.*/)), '\n')),
+    token(`end ${keyword}`),
+    /[^\n]*\n/,
+  );
+}
+
+/**
+ * Shared structure for posting, posting_virtual, and posting_virtual_balanced.
+ * `accountExpr` is the account node or virtual-account sequence.
+ */
+function postingRule($, accountExpr) {
+  return seq(
+    $._ws,
+    optional(seq(choice($.status_cleared, $.status_pending), $._ws)),
+    accountExpr,
+    optional(seq($._ws, $._posting_amounts)),
+    optional(seq(optional($._ws), $.comment)),
+    /\n/,
+  );
+}

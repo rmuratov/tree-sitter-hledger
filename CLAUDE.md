@@ -99,7 +99,7 @@ Tree-sitter normally skips whitespace automatically. This grammar disables that 
 - `secondary_date` attaches directly to `date` with no space (`2026-01-24=01-25`)
 - Double-space separates account name from amount (a single space is part of the account name)
 
-**Consequence:** every rule that spans a line must include `/[ \t]+/` separators and a trailing `/\n/` explicitly.
+**Consequence:** every rule that spans a line must include `$._ws` separators and a trailing `/\n/` explicitly. `_ws` is a private named rule (`_ws: $ => /[ \t]+/`) used throughout the grammar in place of the literal `/[ \t]+/`; the leading `_` hides it from the parse tree.
 
 ### Nullable tokens cause infinite parse loops
 
@@ -140,15 +140,15 @@ Combined with `[$.amount, $.amount]` for the left-commodity vs right-commodity a
 
 ### Status markers and trailing space
 
-In the `header` rule, the space after a status marker is `optional(/[ \t]+/)` — it is consumed when present but can be absent when status is the last token before `\n` (e.g., `2026-01-24 *`):
+In the `header` rule, the space after a status marker is `optional($._ws)` — it is consumed when present but can be absent when status is the last token before `\n` (e.g., `2026-01-24 *`):
 
 ```javascript
-optional(seq(choice($.status_cleared, $.status_pending), optional(/[ \t]+/)))
+optional(seq(choice($.status_cleared, $.status_pending), optional($._ws)))
 ```
 
 This is safe because `description` and `payee` exclude space/tab from their first character (`/[^ \t*!(|\n;][^|\n;]*/`). That exclusion forces the LR parser to always shift the space into the separator — there is no path where description accidentally absorbs a leading space — so the shift-reduce conflict resolves correctly.
 
-In the `posting` rule the space after status is still required (`/[ \t]+/`) because a posting status is always followed by an account name (postings without an account are invalid), so the end-of-line case does not arise there.
+In the `posting` rule the space after status is still required (`$._ws`) because a posting status is always followed by an account name (postings without an account are invalid), so the end-of-line case does not arise there.
 
 ### Description rule: all pipe variants
 
@@ -188,9 +188,26 @@ conflicts: $ => [
 
 The conflicts `[$.tag, $.comment]`, `[$.comment, $.tag_name]`, and `[$.description, $.payee]` were found to be unnecessary and were removed.
 
-### Block comments use an external scanner
+### Block comments use a pure grammar rule
 
-Block comments (`comment ... end comment`) are handled by `src/scanner.c`, not by grammar rules. The scanner activates when `valid_symbols[BLOCK_COMMENT]` and the lookahead is `comment\n`. It consumes everything until `end comment` at the start of a line. Never try to handle this in grammar.js rules — the multi-line nature makes it impossible without an external scanner.
+Block comments (`comment ... end comment`) are handled entirely in `grammar.js` via the `blockRule()` helper — no external scanner. The pattern is:
+
+```javascript
+function blockRule($, keyword) {
+  return seq(
+    token(keyword),                                              // opening keyword
+    optional(seq($._ws, /.*/)),                                 // optional text on opening line
+    '\n',
+    repeat(seq(optional(seq(optional($._ws), /.*/)), '\n')),    // body lines
+    token(`end ${keyword}`),                                    // terminator
+    /[^\n]*\n/,                                                 // trailing text + newline
+  );
+}
+```
+
+**Why this works without a scanner:** tree-sitter's lexer considers which tokens are valid in the current parser state. Inside the body `repeat`, both `/.*/` (the body line match) and `token('end comment')` are potentially valid when the parser sees `end comment` at the start of a line. The specific `token()` string is preferred over the general regex, so the terminator wins and the repeat stops.
+
+**The nullable-token rule does not apply here** because `/.*/` is an anonymous inline regex (not a named rule), and each iteration of the repeat always advances by at least one `'\n'` — so the parser can never get stuck in a zero-length loop.
 
 ### Account name regex
 
