@@ -1,4 +1,4 @@
-; hledger --file playground.journal
+; hledger --file playground.hledger
 
 ; directive_periodic_transaction corpus tests
 ~ monthly

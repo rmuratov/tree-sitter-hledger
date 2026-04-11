@@ -53,13 +53,13 @@ npx tree-sitter test
 Parse a sample file:
 
 ```bash
-npx tree-sitter parse playground.journal
+npx tree-sitter parse playground.hledger
 ```
 
-playground.journal file is used during the development to check that test cases are actually valid and parsable by hledger itself:
+playground.hledger file is used during the development to check that test cases are actually valid and parsable by hledger itself:
 
 ```bash
-hledger print --file=playground.journal
+hledger print --file=playground.hledger
 ```
 
 ## Supported syntax

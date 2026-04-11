@@ -13,7 +13,11 @@
         "j"
       ],
       "injection-regex": "^hledger$",
-      "class-name": "TreeSitterHledger"
+      "class-name": "TreeSitterHledger",
+      "highlights": ["queries/highlights.scm"],
+      "brackets": "queries/brackets.scm",
+      "outline": "queries/outline.scm",
+      "indents": "queries/indents.scm"
     }
   ],
   "metadata": {

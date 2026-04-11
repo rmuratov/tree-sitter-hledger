@@ -18,10 +18,13 @@ npx tree-sitter test
 npx tree-sitter test --filter "Account name"
 
 # Parse a file to inspect the CST output
-npx tree-sitter parse playground.journal
+npx tree-sitter parse playground.hledger
 
-# Validate playground.journal with hledger itself
-hledger print --file=playground.journal
+# Test syntax highlighting
+tree-sitter highlight playground.hledger
+
+# Validate playground.hledger with hledger itself
+hledger print --file=playground.hledger
 
 # Launch interactive playground (WASM build)
 npm start
@@ -50,11 +53,11 @@ input hledger journal snippet
 
 Each `.txt` file covers one grammar concept (dates, postings, account names, etc.). Add new test cases by appending to an existing file or creating a new one.
 
-### `playground.journal`
+### `playground.hledger`
 
-Used during development to test real-world hledger input. It's a valid hledger journal that can be verified with `hledger print --file=playground.journal`. Keep it up-to-date as the grammar evolves to cover new syntax.
+Used during development to test real-world hledger input. It's a valid hledger journal that can be verified with `hledger print --file=playground.hledger`. Keep it up-to-date as the grammar evolves to cover new syntax.
 
-**Balance assertion isolation:** hledger checks balance assertions against the cumulative running balance across the entire file. Each balance assertion test entry in `playground.journal` must use a unique account prefix (e.g. `ba1:`, `ba2:`, `inv:`) so assertions don't fail due to amounts accumulated by other test transactions.
+**Balance assertion isolation:** hledger checks balance assertions against the cumulative running balance across the entire file. Each balance assertion test entry in `playground.hledger` must use a unique account prefix (e.g. `ba1:`, `ba2:`, `inv:`) so assertions don't fail due to amounts accumulated by other test transactions.
 
 ### AST node naming conventions
 
@@ -84,7 +87,7 @@ These conventions are established across all corpus files:
 2. Run `npx tree-sitter generate`
 3. Add/update corpus tests in `test/corpus/`
 4. Run `npx tree-sitter test`
-5. Update `playground.journal` if needed and verify with `hledger print`
+5. Update `playground.hledger` if needed and verify with `hledger print`
 
 ---
 
