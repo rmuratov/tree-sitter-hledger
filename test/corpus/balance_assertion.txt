@@ -79,12 +79,12 @@ Balance assignment with cost
         (assertion_operator)
         (amount
           (commodity)
-          (quantity)))
-      (cost
-        (cost_operator)
-        (amount
-          (commodity)
-          (quantity))))
+          (quantity))
+        (cost
+          (cost_operator)
+          (amount
+            (commodity)
+            (quantity)))))
     (posting
       (account))))
 

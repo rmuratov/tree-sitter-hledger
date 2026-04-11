@@ -18,6 +18,8 @@ export default grammar({
     [$._posting_amounts],
     // within amount: left-commodity form vs right-commodity form ambiguity
     [$.amount, $.amount],
+    // within assertion: whitespace after amount could be cost prefix or end of assertion
+    [$.assertion],
   ],
 
   rules: {
@@ -160,7 +162,7 @@ export default grammar({
           optional(seq($._ws, $.assertion))
         ),
         seq($.cost, optional(seq($._ws, $.assertion))),
-        seq($.assertion, optional(seq($._ws, $.cost))) // balance assignment: = $1 @ €2
+        $.assertion // standalone assertion (cost may be inside assertion)
       ),
 
     // Account name: chars except whitespace-like and special chars
@@ -230,7 +232,13 @@ export default grammar({
     cost: ($) => seq($.cost_operator, optional($._ws), $.amount),
     cost_operator: ($) => token(choice("@@", "@")),
 
-    assertion: ($) => seq($.assertion_operator, optional($._ws), $.amount),
+    assertion: ($) =>
+      seq(
+        $.assertion_operator,
+        optional($._ws),
+        $.amount,
+        optional(seq($._ws, $.cost))
+      ),
     assertion_operator: ($) => token(choice("==*", "=*", "==", "=")),
 
     // =========================================================
@@ -299,7 +307,8 @@ export default grammar({
         /\n/
       ),
 
-    directive_decimal_mark: ($) => seq("decimal-mark", $._ws, /[.,]/, /\n/),
+    directive_decimal_mark: ($) =>
+      seq("decimal-mark", $._ws, /[.,]/, optional(seq($._ws, $.comment)), /\n/),
 
     directive_include: ($) => seq("include", $._ws, $.path, /\n/),
 
@@ -314,6 +323,7 @@ export default grammar({
         $._ws,
         $.period_expression,
         optional(seq($._ws, $.description)),
+        optional($.comment),
         /\n/,
         repeat(choice($.posting, $.posting_virtual, $.posting_virtual_balanced))
       ),
@@ -322,9 +332,20 @@ export default grammar({
     period_expression: ($) => /([^ \t\n]| [^ \t\n])+/,
 
     directive_price: ($) =>
-      seq("P", $._ws, $.date, $._ws, $.commodity, $._ws, $.amount, /\n/),
+      seq(
+        "P",
+        $._ws,
+        $.date,
+        $._ws,
+        $.commodity,
+        $._ws,
+        $.amount,
+        optional(seq($._ws, $.comment)),
+        /\n/
+      ),
 
-    directive_tag: ($) => seq("tag", $._ws, $.tag_name, /\n/),
+    directive_tag: ($) =>
+      seq("tag", $._ws, $.tag_name, optional(seq($._ws, $.comment)), /\n/),
 
     // =========================================================
     // WHITESPACE (inline — vanishes from the tree)
