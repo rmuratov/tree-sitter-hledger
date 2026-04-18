@@ -121,7 +121,7 @@ export default grammar({
           seq(
             $._ws,
             optional(
-              seq(choice($.status_cleared, $.status_pending), optional($._ws))
+              seq($.status, optional($._ws))
             ),
             optional(seq($.code, $._ws)),
             optional($.description),
@@ -131,8 +131,7 @@ export default grammar({
         /\n/
       ),
 
-    status_cleared: ($) => "*",
-    status_pending: ($) => "!",
+    status: ($) => choice("*", "!"),
 
     code: ($) => seq("(", /[^)\n]*/, ")"),
 
@@ -394,7 +393,7 @@ function blockRule($, keyword) {
 function postingRule($, accountExpr) {
   return seq(
     $._ws,
-    optional(seq(choice($.status_cleared, $.status_pending), $._ws)),
+    optional(seq($.status, $._ws)),
     accountExpr,
     optional(seq($._ws, $._posting_amounts)),
     optional(seq(optional($._ws), $.comment)),

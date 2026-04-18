@@ -9,7 +9,7 @@ A transaction with cleared status
   (transaction
     (header
       (date)
-      (status_cleared)
+      (status)
       (description))))
 
 ================================================================================
@@ -23,7 +23,7 @@ A transaction with pending status
   (transaction
     (header
       (date)
-      (status_pending)
+      (status)
       (description))))
 
 ================================================================================
@@ -37,7 +37,7 @@ More spaces around the status
   (transaction
     (header
       (date)
-      (status_pending)
+      (status)
       (description))))
 
 ================================================================================
@@ -51,7 +51,7 @@ Status with no description
   (transaction
     (header
       (date)
-      (status_cleared))))
+      (status))))
 
 ================================================================================
 Pending status with no description
@@ -64,4 +64,4 @@ Pending status with no description
   (transaction
     (header
       (date)
-      (status_pending))))
+      (status))))

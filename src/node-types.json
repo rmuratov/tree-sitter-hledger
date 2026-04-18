@@ -395,11 +395,7 @@
           "named": true
         },
         {
-          "type": "status_cleared",
-          "named": true
-        },
-        {
-          "type": "status_pending",
+          "type": "status",
           "named": true
         }
       ]
@@ -444,11 +440,7 @@
           "named": true
         },
         {
-          "type": "status_cleared",
-          "named": true
-        },
-        {
-          "type": "status_pending",
+          "type": "status",
           "named": true
         }
       ]
@@ -483,11 +475,7 @@
           "named": true
         },
         {
-          "type": "status_cleared",
-          "named": true
-        },
-        {
-          "type": "status_pending",
+          "type": "status",
           "named": true
         }
       ]
@@ -522,11 +510,7 @@
           "named": true
         },
         {
-          "type": "status_cleared",
-          "named": true
-        },
-        {
-          "type": "status_pending",
+          "type": "status",
           "named": true
         }
       ]
@@ -602,7 +586,7 @@
     }
   },
   {
-    "type": "status_cleared",
+    "type": "status",
     "named": true,
     "fields": {}
   },
@@ -663,6 +647,10 @@
   },
   {
     "type": "\n",
+    "named": false
+  },
+  {
+    "type": "!",
     "named": false
   },
   {
@@ -791,10 +779,6 @@
   },
   {
     "type": "query",
-    "named": true
-  },
-  {
-    "type": "status_pending",
     "named": true
   },
   {

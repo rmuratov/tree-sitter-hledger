@@ -57,7 +57,7 @@ Transaction with all optional header fields
   (transaction
     (header
       (date)
-      (status_cleared)
+      (status)
       (code)
       (description)
       (comment))

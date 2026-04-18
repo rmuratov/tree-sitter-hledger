@@ -387,17 +387,8 @@
                       "type": "SEQ",
                       "members": [
                         {
-                          "type": "CHOICE",
-                          "members": [
-                            {
-                              "type": "SYMBOL",
-                              "name": "status_cleared"
-                            },
-                            {
-                              "type": "SYMBOL",
-                              "name": "status_pending"
-                            }
-                          ]
+                          "type": "SYMBOL",
+                          "name": "status"
                         },
                         {
                           "type": "CHOICE",
@@ -476,13 +467,18 @@
         }
       ]
     },
-    "status_cleared": {
-      "type": "STRING",
-      "value": "*"
-    },
-    "status_pending": {
-      "type": "STRING",
-      "value": "!"
+    "status": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "*"
+        },
+        {
+          "type": "STRING",
+          "value": "!"
+        }
+      ]
     },
     "code": {
       "type": "SEQ",
@@ -566,17 +562,8 @@
               "type": "SEQ",
               "members": [
                 {
-                  "type": "CHOICE",
-                  "members": [
-                    {
-                      "type": "SYMBOL",
-                      "name": "status_cleared"
-                    },
-                    {
-                      "type": "SYMBOL",
-                      "name": "status_pending"
-                    }
-                  ]
+                  "type": "SYMBOL",
+                  "name": "status"
                 },
                 {
                   "type": "SYMBOL",
@@ -663,17 +650,8 @@
               "type": "SEQ",
               "members": [
                 {
-                  "type": "CHOICE",
-                  "members": [
-                    {
-                      "type": "SYMBOL",
-                      "name": "status_cleared"
-                    },
-                    {
-                      "type": "SYMBOL",
-                      "name": "status_pending"
-                    }
-                  ]
+                  "type": "SYMBOL",
+                  "name": "status"
                 },
                 {
                   "type": "SYMBOL",
@@ -773,17 +751,8 @@
               "type": "SEQ",
               "members": [
                 {
-                  "type": "CHOICE",
-                  "members": [
-                    {
-                      "type": "SYMBOL",
-                      "name": "status_cleared"
-                    },
-                    {
-                      "type": "SYMBOL",
-                      "name": "status_pending"
-                    }
-                  ]
+                  "type": "SYMBOL",
+                  "name": "status"
                 },
                 {
                   "type": "SYMBOL",

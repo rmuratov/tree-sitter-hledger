@@ -39,12 +39,12 @@ A code after status
   (transaction
     (header
       (date)
-      (status_pending)
+      (status)
       (code)
       (description)))
   (transaction
     (header
       (date)
-      (status_cleared)
+      (status)
       (code)
       (description))))

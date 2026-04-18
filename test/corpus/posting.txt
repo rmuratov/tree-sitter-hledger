@@ -49,7 +49,7 @@ Posting with cleared status
     (header
       (date))
     (posting
-      (status_cleared)
+      (status)
       (account)
       (amount
         (quantity)))
@@ -70,7 +70,7 @@ Posting with pending status
     (header
       (date))
     (posting
-      (status_pending)
+      (status)
       (account)
       (amount
         (quantity)))
@@ -112,7 +112,7 @@ Posting with status and inline comment
     (header
       (date))
     (posting
-      (status_cleared)
+      (status)
       (account)
       (amount
         (quantity))

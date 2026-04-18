@@ -11,8 +11,7 @@
 (secondary_date) @number
 
 ; ─── Transaction header ───────────────────────────────────────────────────────
-(status_cleared) @keyword
-(status_pending) @keyword
+(status) @keyword
 
 ; Code reference, e.g. (#1234) or (REF123)
 (code "(" @punctuation.bracket)
