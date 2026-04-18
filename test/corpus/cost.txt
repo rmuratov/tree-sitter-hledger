@@ -70,7 +70,7 @@ Cost with balance assertion
       (account)
       (amount
         (commodity)
-        (negative)
+        (sign)
         (quantity)))
     (posting
       (account)

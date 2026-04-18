@@ -16,15 +16,11 @@
           "named": true
         },
         {
-          "type": "negative",
-          "named": true
-        },
-        {
-          "type": "positive",
-          "named": true
-        },
-        {
           "type": "quantity",
+          "named": true
+        },
+        {
+          "type": "sign",
           "named": true
         }
       ]
@@ -522,6 +518,11 @@
     "fields": {}
   },
   {
+    "type": "sign",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "source_file",
     "named": true,
     "root": true,
@@ -666,7 +667,15 @@
     "named": false
   },
   {
+    "type": "+",
+    "named": false
+  },
+  {
     "type": ",",
+    "named": false
+  },
+  {
+    "type": "-",
     "named": false
   },
   {
@@ -750,10 +759,6 @@
     "named": false
   },
   {
-    "type": "negative",
-    "named": true
-  },
-  {
     "type": "note",
     "named": true
   },
@@ -767,10 +772,6 @@
   },
   {
     "type": "period_expression",
-    "named": true
-  },
-  {
-    "type": "positive",
     "named": true
   },
   {

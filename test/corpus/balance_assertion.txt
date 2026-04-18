@@ -27,7 +27,7 @@ Single-commodity assertion (=)
         (assertion_operator)
         (amount
           (commodity)
-          (negative)
+          (sign)
           (quantity))))))
 
 ================================================================================
@@ -57,7 +57,7 @@ Sole commodity assertion (==)
       (account)
       (amount
         (commodity)
-        (negative)
+        (sign)
         (quantity)))))
 
 ================================================================================
@@ -116,7 +116,7 @@ Subaccount-inclusive assertion (=*)
     (posting
       (account)
       (amount
-        (negative)
+        (sign)
         (commodity)
         (quantity)))
     (posting

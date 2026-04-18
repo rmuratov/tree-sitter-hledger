@@ -35,8 +35,7 @@
 ; ─── Amounts ──────────────────────────────────────────────────────────────────
 (quantity) @number
 (commodity) @type
-(negative) @operator
-(positive) @operator
+(sign) @operator
 (multiplier) @operator
 (cost_operator) @operator
 (assertion_operator) @operator

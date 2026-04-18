@@ -184,23 +184,23 @@ export default grammar({
         choice(
           // Sign before left-commodity: -$1, +EUR 100, + $1
           seq(
-            choice($.negative, $.positive),
+            $.sign,
             optional($._ws),
             $.commodity,
             optional($._ws),
-            optional(seq(choice($.negative, $.positive), optional($._ws))),
+            optional(seq($.sign, optional($._ws))),
             $.quantity
           ),
           // Left-commodity with optional inner sign: $1, EUR 100, $-1, $ 1, $-      1
           seq(
             $.commodity,
             optional($._ws),
-            optional(seq(choice($.negative, $.positive), optional($._ws))),
+            optional(seq($.sign, optional($._ws))),
             $.quantity
           ),
           // Sign before bare quantity, optional right-commodity: -1, +1, -1 USD
           seq(
-            choice($.negative, $.positive),
+            $.sign,
             optional($._ws),
             $.quantity,
             optional(seq($._ws, $.commodity))
@@ -211,8 +211,7 @@ export default grammar({
       ),
 
     multiplier: ($) => "*",
-    negative: ($) => "-",
-    positive: ($) => "+",
+    sign: ($) => choice("+", "-"),
 
     quantity: ($) =>
       token(

@@ -41,7 +41,7 @@ Transaction with description and postings
       (account)
       (amount
         (commodity)
-        (negative)
+        (sign)
         (quantity)))))
 
 ================================================================================
@@ -69,7 +69,7 @@ Transaction with all optional header fields
     (posting
       (account)
       (amount
-        (negative)
+        (sign)
         (quantity)
         (commodity)))))
 

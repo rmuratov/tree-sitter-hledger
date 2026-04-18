@@ -136,7 +136,7 @@ Posting with comment directly after amount (no space)
     (posting
       (account)
       (amount
-        (negative)
+        (sign)
         (quantity)
         (commodity))
       (comment))
@@ -159,7 +159,7 @@ Posting with negative amount
     (posting
       (account)
       (amount
-        (negative)
+        (sign)
         (quantity)))
     (posting
       (account)
@@ -191,5 +191,5 @@ Multiple postings
     (posting
       (account)
       (amount
-        (negative)
+        (sign)
         (quantity)))))

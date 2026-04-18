@@ -13,7 +13,7 @@ Auto posting with constant amount
       (account)
       (amount
         (commodity)
-        (negative)
+        (sign)
         (quantity)))))
 
 ================================================================================
@@ -32,7 +32,7 @@ Auto posting with multiply amounts
       (account)
       (amount
         (multiplier)
-        (negative)
+        (sign)
         (quantity)))
     (posting
       (account)
@@ -73,5 +73,5 @@ Auto posting with quoted query
       (account)
       (amount
         (commodity)
-        (negative)
+        (sign)
         (quantity)))))

@@ -954,17 +954,8 @@
               "type": "SEQ",
               "members": [
                 {
-                  "type": "CHOICE",
-                  "members": [
-                    {
-                      "type": "SYMBOL",
-                      "name": "negative"
-                    },
-                    {
-                      "type": "SYMBOL",
-                      "name": "positive"
-                    }
-                  ]
+                  "type": "SYMBOL",
+                  "name": "sign"
                 },
                 {
                   "type": "CHOICE",
@@ -1001,17 +992,8 @@
                       "type": "SEQ",
                       "members": [
                         {
-                          "type": "CHOICE",
-                          "members": [
-                            {
-                              "type": "SYMBOL",
-                              "name": "negative"
-                            },
-                            {
-                              "type": "SYMBOL",
-                              "name": "positive"
-                            }
-                          ]
+                          "type": "SYMBOL",
+                          "name": "sign"
                         },
                         {
                           "type": "CHOICE",
@@ -1064,17 +1046,8 @@
                       "type": "SEQ",
                       "members": [
                         {
-                          "type": "CHOICE",
-                          "members": [
-                            {
-                              "type": "SYMBOL",
-                              "name": "negative"
-                            },
-                            {
-                              "type": "SYMBOL",
-                              "name": "positive"
-                            }
-                          ]
+                          "type": "SYMBOL",
+                          "name": "sign"
                         },
                         {
                           "type": "CHOICE",
@@ -1105,17 +1078,8 @@
               "type": "SEQ",
               "members": [
                 {
-                  "type": "CHOICE",
-                  "members": [
-                    {
-                      "type": "SYMBOL",
-                      "name": "negative"
-                    },
-                    {
-                      "type": "SYMBOL",
-                      "name": "positive"
-                    }
-                  ]
+                  "type": "SYMBOL",
+                  "name": "sign"
                 },
                 {
                   "type": "CHOICE",
@@ -1194,13 +1158,18 @@
       "type": "STRING",
       "value": "*"
     },
-    "negative": {
-      "type": "STRING",
-      "value": "-"
-    },
-    "positive": {
-      "type": "STRING",
-      "value": "+"
+    "sign": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "+"
+        },
+        {
+          "type": "STRING",
+          "value": "-"
+        }
+      ]
     },
     "quantity": {
       "type": "TOKEN",

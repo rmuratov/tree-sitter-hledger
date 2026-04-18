@@ -16,7 +16,7 @@ Unbalanced virtual posting
       (account)
       (amount
         (commodity)
-        (negative)
+        (sign)
         (quantity)))
     (posting
       (account)
@@ -27,7 +27,7 @@ Unbalanced virtual posting
       (account)
       (amount
         (commodity)
-        (negative)
+        (sign)
         (quantity)))))
 
 ================================================================================
@@ -49,7 +49,7 @@ Balanced virtual posting
       (account)
       (amount
         (commodity)
-        (negative)
+        (sign)
         (quantity)))
     (posting
       (account)
@@ -60,7 +60,7 @@ Balanced virtual posting
       (account)
       (amount
         (commodity)
-        (negative)
+        (sign)
         (quantity)))
     (posting_virtual_balanced
       (account)
@@ -86,7 +86,7 @@ Amountless unbalanced virtual posting
       (account)
       (amount
         (commodity)
-        (negative)
+        (sign)
         (quantity)))
     (posting
       (account)

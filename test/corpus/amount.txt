@@ -112,7 +112,7 @@ Minus sign before left commodity
     (posting
       (account)
       (amount
-        (negative)
+        (sign)
         (commodity)
         (quantity)))
     (posting
@@ -135,7 +135,7 @@ Minus sign after left commodity
       (account)
       (amount
         (commodity)
-        (negative)
+        (sign)
         (quantity)))
     (posting
       (account))))
@@ -156,7 +156,7 @@ Plus sign before bare quantity
     (posting
       (account)
       (amount
-        (positive)
+        (sign)
         (quantity)))
     (posting
       (account))))
@@ -177,7 +177,7 @@ Plus sign before left commodity
     (posting
       (account)
       (amount
-        (positive)
+        (sign)
         (commodity)
         (quantity)))
     (posting
@@ -199,7 +199,7 @@ Plus sign before left commodity with space
     (posting
       (account)
       (amount
-        (positive)
+        (sign)
         (commodity)
         (quantity)))
     (posting
@@ -222,7 +222,7 @@ Plus sign after left commodity
       (account)
       (amount
         (commodity)
-        (positive)
+        (sign)
         (quantity)))
     (posting
       (account))))
@@ -244,7 +244,7 @@ Sign and spaces between commodity and number
       (account)
       (amount
         (commodity)
-        (negative)
+        (sign)
         (quantity)))
     (posting
       (account))))
