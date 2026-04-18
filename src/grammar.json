@@ -267,6 +267,10 @@
         }
       }
     },
+    "_raw_comment": {
+      "type": "PATTERN",
+      "value": "[;#][^\\n]*"
+    },
     "date": {
       "type": "PATTERN",
       "value": "\\d{4}[-/.]\\d{1,2}[-/.]\\d{1,2}|\\d{1,2}[-/.]\\d{1,2}"
@@ -319,7 +323,7 @@
                     "type": "ALIAS",
                     "content": {
                       "type": "SYMBOL",
-                      "name": "_body_comment_unindented"
+                      "name": "_raw_comment"
                     },
                     "named": true,
                     "value": "comment"
@@ -351,14 +355,6 @@
           "value": "\\n"
         }
       ]
-    },
-    "_raw_comment": {
-      "type": "PATTERN",
-      "value": "[;#][^\\n]*"
-    },
-    "_body_comment_unindented": {
-      "type": "PATTERN",
-      "value": "[;#][^\\n]*"
     },
     "header": {
       "type": "SEQ",
@@ -939,7 +935,7 @@
     },
     "account": {
       "type": "PATTERN",
-      "value": "[^ \\t\\n;#@=()\\[\\]*!]([^ \\t\\n;#@=()\\[\\]]| [^ \\t\\n;#@=()\\[\\]])*"
+      "value": "[^ \\t\\n;#@=()\\[\\]*!][^ \\t\\n;#@=()\\[\\]]*( [^ \\t\\n;#@=()\\[\\]]+)*"
     },
     "amount": {
       "type": "SEQ",
@@ -1327,41 +1323,46 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "STRING",
-          "value": "account"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "_ws"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "account"
-        },
-        {
-          "type": "CHOICE",
+          "type": "SEQ",
           "members": [
             {
-              "type": "SEQ",
+              "type": "STRING",
+              "value": "account"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_ws"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "account"
+            },
+            {
+              "type": "CHOICE",
               "members": [
                 {
-                  "type": "SYMBOL",
-                  "name": "_ws"
+                  "type": "SEQ",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "_ws"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "comment"
+                    }
+                  ]
                 },
                 {
-                  "type": "SYMBOL",
-                  "name": "comment"
+                  "type": "BLANK"
                 }
               ]
             },
             {
-              "type": "BLANK"
+              "type": "PATTERN",
+              "value": "\\n"
             }
           ]
-        },
-        {
-          "type": "PATTERN",
-          "value": "\\n"
         },
         {
           "type": "REPEAT",
@@ -1496,50 +1497,55 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "STRING",
-          "value": "commodity"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "_ws"
-        },
-        {
-          "type": "CHOICE",
+          "type": "SEQ",
           "members": [
             {
-              "type": "SYMBOL",
-              "name": "amount"
+              "type": "STRING",
+              "value": "commodity"
             },
             {
               "type": "SYMBOL",
-              "name": "commodity"
-            }
-          ]
-        },
-        {
-          "type": "CHOICE",
-          "members": [
+              "name": "_ws"
+            },
             {
-              "type": "SEQ",
+              "type": "CHOICE",
               "members": [
                 {
                   "type": "SYMBOL",
-                  "name": "_ws"
+                  "name": "amount"
                 },
                 {
                   "type": "SYMBOL",
-                  "name": "comment"
+                  "name": "commodity"
                 }
               ]
             },
             {
-              "type": "BLANK"
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SEQ",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "_ws"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "comment"
+                    }
+                  ]
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
+            },
+            {
+              "type": "PATTERN",
+              "value": "\\n"
             }
           ]
-        },
-        {
-          "type": "PATTERN",
-          "value": "\\n"
         },
         {
           "type": "REPEAT",
