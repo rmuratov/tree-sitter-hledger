@@ -15,8 +15,13 @@
             "type": "SEQ",
             "members": [
               {
-                "type": "SYMBOL",
-                "name": "comment"
+                "type": "ALIAS",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_raw_comment"
+                },
+                "named": true,
+                "value": "comment"
               },
               {
                 "type": "PATTERN",
@@ -346,6 +351,10 @@
           "value": "\\n"
         }
       ]
+    },
+    "_raw_comment": {
+      "type": "PATTERN",
+      "value": "[;#][^\\n]*"
     },
     "_body_comment_unindented": {
       "type": "PATTERN",
@@ -1890,6 +1899,9 @@
     ],
     [
       "assertion"
+    ],
+    [
+      "transaction"
     ]
   ],
   "precedences": [],

@@ -7,6 +7,8 @@
 /// <reference types="tree-sitter-cli/dsl" />
 // @ts-check
 
+const DATE_REGEX = /\d{4}[-/.]\d{1,2}[-/.]\d{1,2}|\d{1,2}[-/.]\d{1,2}/;
+
 export default grammar({
   name: "hledger",
 
@@ -20,6 +22,8 @@ export default grammar({
     [$.amount, $.amount],
     // within assertion: whitespace after amount could be cost prefix or end of assertion
     [$.assertion],
+    // after header, a bare ';' could be a non-indented body comment OR a top-level comment
+    [$.transaction],
   ],
 
   rules: {
@@ -31,7 +35,7 @@ export default grammar({
       repeat(
         choice(
           $.transaction,
-          seq($.comment, /\n/),
+          seq(alias($._raw_comment, $.comment), /\n/),
           alias($.block_comment, $.comment),
           $.directive_account,
           $.directive_alias,
@@ -83,11 +87,10 @@ export default grammar({
     // DATES
     // =========================================================
 
-    date: ($) => /\d{4}[-/.]\d{1,2}[-/.]\d{1,2}|\d{1,2}[-/.]\d{1,2}/,
+    date: ($) => DATE_REGEX,
 
     // secondary_date must immediately follow the primary date (no space before =)
-    secondary_date: ($) =>
-      seq("=", /\d{4}[-/.]\d{1,2}[-/.]\d{1,2}|\d{1,2}[-/.]\d{1,2}/),
+    secondary_date: ($) => seq("=", DATE_REGEX),
 
     // =========================================================
     // TRANSACTIONS
@@ -110,7 +113,10 @@ export default grammar({
     // Indented comment line inside a transaction body (tags parsed)
     _body_comment: ($) => seq($._ws, $.comment, /\n/),
 
-    // Non-indented comment line inside a transaction body (no tag parsing)
+    // No tag parsing: top-level comment lines
+    _raw_comment: ($) => /[;#][^\n]*/,
+
+    // No tag parsing: non-indented comment lines inside a transaction body
     _body_comment_unindented: ($) => /[;#][^\n]*/,
 
     header: ($) =>

@@ -1,59 +1,79 @@
 ================================================================================
 Tag without value
 ================================================================================
-; some-tag:
+2026-01-24 Groceries
+  ; some-tag:
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (comment
-    (tag
-      (tag_name))))
+  (transaction
+    (header
+      (date)
+      (description))
+    (comment
+      (tag
+        (tag_name)))))
 
 ================================================================================
 Tag with value
 ================================================================================
-; tag1: this is tag1's value
+2026-01-24 Groceries
+  ; tag1: this is tag1's value
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (comment
-    (tag
-      (tag_name)
-      (tag_value))))
+  (transaction
+    (header
+      (date)
+      (description))
+    (comment
+      (tag
+        (tag_name)
+        (tag_value)))))
 
 ================================================================================
 Multiple tags
 ================================================================================
-; tag1:value 1, tag2:value 2
+2026-01-24 Groceries
+  ; tag1:value 1, tag2:value 2
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (comment
-    (tag
-      (tag_name)
-      (tag_value))
-    (tag
-      (tag_name)
-      (tag_value))))
+  (transaction
+    (header
+      (date)
+      (description))
+    (comment
+      (tag
+        (tag_name)
+        (tag_value))
+      (tag
+        (tag_name)
+        (tag_value)))))
 
 ================================================================================
 Multiple tags with trailing comment text
 ================================================================================
-; tag1:value 1, tag2:value 2, comment text
+2026-01-24 Groceries
+  ; tag1:value 1, tag2:value 2, comment text
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (comment
-    (tag
-      (tag_name)
-      (tag_value))
-    (tag
-      (tag_name)
-      (tag_value))))
+  (transaction
+    (header
+      (date)
+      (description))
+    (comment
+      (tag
+        (tag_name)
+        (tag_value))
+      (tag
+        (tag_name)
+        (tag_value)))))
 
 ================================================================================
 Tag in transaction header
