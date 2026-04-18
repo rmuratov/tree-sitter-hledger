@@ -78,3 +78,18 @@ Comment in transaction body
       (date)
       (description))
     (comment)))
+
+================================================================================
+Comment in transaction body, not parsed as tag
+================================================================================
+2026-01-24 Groceries
+;Assets:Test  $1
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (header
+      (date)
+      (description))
+    (comment)))

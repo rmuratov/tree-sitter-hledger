@@ -101,13 +101,17 @@ export default grammar({
             $.posting,
             $.posting_virtual,
             $.posting_virtual_balanced,
-            $._body_comment
+            $._body_comment,
+            seq(alias($._body_comment_unindented, $.comment), /\n/)
           )
         )
       ),
 
-    // Indented comment line inside a transaction body
+    // Indented comment line inside a transaction body (tags parsed)
     _body_comment: ($) => seq($._ws, $.comment, /\n/),
+
+    // Non-indented comment line inside a transaction body (no tag parsing)
+    _body_comment_unindented: ($) => /[;#][^\n]*/,
 
     header: ($) =>
       seq(

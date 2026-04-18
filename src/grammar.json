@@ -306,6 +306,24 @@
               {
                 "type": "SYMBOL",
                 "name": "_body_comment"
+              },
+              {
+                "type": "SEQ",
+                "members": [
+                  {
+                    "type": "ALIAS",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "_body_comment_unindented"
+                    },
+                    "named": true,
+                    "value": "comment"
+                  },
+                  {
+                    "type": "PATTERN",
+                    "value": "\\n"
+                  }
+                ]
               }
             ]
           }
@@ -328,6 +346,10 @@
           "value": "\\n"
         }
       ]
+    },
+    "_body_comment_unindented": {
+      "type": "PATTERN",
+      "value": "[;#][^\\n]*"
     },
     "header": {
       "type": "SEQ",
