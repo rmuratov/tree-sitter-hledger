@@ -111,11 +111,11 @@
               },
               {
                 "type": "PATTERN",
-                "value": "[^a-zA-Z:,\\n]+"
+                "value": "[^a-zA-Z\\u0080-\\uFFFF:,\\n]+"
               },
               {
                 "type": "PATTERN",
-                "value": "[a-zA-Z][a-zA-Z0-9_-]*"
+                "value": "[a-zA-Z\\u0080-\\uFFFF][a-zA-Z0-9_\\-\\u0080-\\uFFFF]*"
               },
               {
                 "type": "STRING",
@@ -253,7 +253,7 @@
       "value": 1,
       "content": {
         "type": "PATTERN",
-        "value": "[a-zA-Z][a-zA-Z0-9_-]*"
+        "value": "[a-zA-Z\\u0080-\\uFFFF][a-zA-Z0-9_\\-\\u0080-\\uFFFF]*"
       }
     },
     "tag_value": {

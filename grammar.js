@@ -63,8 +63,8 @@ export default grammar({
         repeat(
           choice(
             prec(1, $.tag),
-            /[^a-zA-Z:,\n]+/, // non-alpha, non-comma, non-colon (so ':' can't steal tag's ':')
-            /[a-zA-Z][a-zA-Z0-9_-]*/, // alpha word that is NOT a tag (anonymous)
+            /[^a-zA-Z\u0080-\uFFFF:,\n]+/, // non-letter, non-comma, non-colon
+            /[a-zA-Z\u0080-\uFFFF][a-zA-Z0-9_\-\u0080-\uFFFF]*/, // letter word that is NOT a tag (anonymous)
             ":", // standalone colon (not part of a tag)
             ","
           )
@@ -79,8 +79,7 @@ export default grammar({
     block_comment: ($) => blockRule($, "comment"),
 
     tag: ($) => prec.right(seq($.tag_name, ":", optional($.tag_value))),
-    tag_name: ($) => prec(1, /[a-zA-Z][a-zA-Z0-9_-]*/),
-    // tag_value: one or more chars (so empty value gives no tag_value node)
+    tag_name: ($) => prec(1, /[a-zA-Z\u0080-\uFFFF][a-zA-Z0-9_\-\u0080-\uFFFF]*/),
     tag_value: ($) => token(prec(1, /[^,\n]+/)),
 
     // =========================================================

@@ -156,3 +156,26 @@ Tag in transaction body comment
         (quantity)))
     (posting
       (account))))
+
+================================================================================
+UTF tags
+================================================================================
+2026-01-24 Groceries
+    Expenses:Food  $1  ; МОЙТЭГ:ЗНАЧЕНИЕ
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (header
+      (date)
+      (description))
+    (posting
+      (account)
+      (amount
+        (commodity)
+        (quantity))
+      (comment
+        (tag
+          (tag_name)
+          (tag_value))))))
