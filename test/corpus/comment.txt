@@ -59,10 +59,9 @@ Comment in transaction header
 
 (source_file
   (transaction
-    (header
-      (date)
-      (description)
-      (comment))))
+    (date)
+    (description)
+    (comment)))
 
 ================================================================================
 Comment in transaction body
@@ -74,9 +73,8 @@ Comment in transaction body
 
 (source_file
   (transaction
-    (header
-      (date)
-      (description))
+    (date)
+    (description)
     (comment)))
 
 ================================================================================
@@ -89,7 +87,6 @@ Comment in transaction body, not parsed as tag
 
 (source_file
   (transaction
-    (header
-      (date)
-      (description))
+    (date)
+    (description)
     (comment)))

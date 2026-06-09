@@ -7,9 +7,8 @@ A description
 
 (source_file
   (transaction
-    (header
-      (date)
-      (description))))
+    (date)
+    (description)))
 
 ================================================================================
 A description with multiple words
@@ -20,9 +19,8 @@ A description with multiple words
 
 (source_file
   (transaction
-    (header
-      (date)
-      (description))))
+    (date)
+    (description)))
 
 ================================================================================
 A description with comment
@@ -33,10 +31,9 @@ A description with comment
 
 (source_file
   (transaction
-    (header
-      (date)
-      (description)
-      (comment))))
+    (date)
+    (description)
+    (comment)))
 
 ================================================================================
 A description with unicode
@@ -47,6 +44,77 @@ A description with unicode
 
 (source_file
   (transaction
-    (header
-      (date)
-      (description))))
+    (date)
+    (description)))
+
+================================================================================
+A description with payee and note separated by a pipe
+================================================================================
+2026-01-24 Payee | Note
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)))
+
+================================================================================
+A description with extra whitespace around the pipe
+================================================================================
+2026-01-24 Payee     |      Note
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)))
+
+================================================================================
+A description that is a bare pipe (empty payee and note)
+================================================================================
+2026-01-24 |
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)))
+
+================================================================================
+A description with empty payee (leading pipe)
+================================================================================
+2026-01-24 | note only
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)))
+
+================================================================================
+A description with empty note (trailing pipe)
+================================================================================
+2026-01-24 payee only |
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)))
+
+================================================================================
+A description with multiple pipes
+================================================================================
+2026-01-24 a | b | c
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)))

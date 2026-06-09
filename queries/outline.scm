@@ -1,13 +1,12 @@
 ; ─── Transactions ─────────────────────────────────────────────────────────────
 ; Show "2026-01-24 | Groceries" when a description is present.
 (transaction
-  (header
-    (date) @context
-    (description) @name)) @item
+  (date) @context
+  (description) @name) @item
 
 ; Fall back to date-only when there is no description.
 (transaction
-  (header (date) @name)) @item
+  (date) @name) @item
 
 ; ─── Periodic transaction rules ───────────────────────────────────────────────
 (directive_periodic_transaction

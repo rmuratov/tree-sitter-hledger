@@ -18,10 +18,10 @@
 (code ")" @punctuation.bracket)
 (code) @string
 
-; Payee and note (the | separator is covered by the parent description capture)
-(payee) @string
-(note) @comment.doc
 (description) @string
+
+; Payee declared by the `payee` directive
+(payee) @string
 
 ; ─── Accounts ─────────────────────────────────────────────────────────────────
 (account) @variable

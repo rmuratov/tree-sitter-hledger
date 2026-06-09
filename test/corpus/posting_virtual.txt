@@ -10,8 +10,7 @@ Unbalanced virtual posting
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -43,8 +42,7 @@ Balanced virtual posting
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -80,8 +78,7 @@ Amountless unbalanced virtual posting
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount

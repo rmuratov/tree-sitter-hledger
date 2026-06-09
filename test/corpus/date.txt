@@ -7,8 +7,7 @@ Date with dashes
 
 (source_file
   (transaction
-    (header
-      (date))))
+    (date)))
 
 ================================================================================
 Date with dashes with omitted zeroes
@@ -19,8 +18,7 @@ Date with dashes with omitted zeroes
 
 (source_file
   (transaction
-    (header
-      (date))))
+    (date)))
 
 ================================================================================
 Date with dashes without the year
@@ -31,8 +29,7 @@ Date with dashes without the year
 
 (source_file
   (transaction
-    (header
-      (date))))
+    (date)))
 
 ================================================================================
 Date with dashes without the year with omitted zeroes
@@ -43,8 +40,7 @@ Date with dashes without the year with omitted zeroes
 
 (source_file
   (transaction
-    (header
-      (date))))
+    (date)))
 
 ================================================================================
 Date with slashes
@@ -55,8 +51,7 @@ Date with slashes
 
 (source_file
   (transaction
-    (header
-      (date))))
+    (date)))
 
 ================================================================================
 Date with slashes with omitted zeroes
@@ -67,9 +62,7 @@ Date with slashes with omitted zeroes
 
 (source_file
   (transaction
-    (header
-      (date))))
-
+    (date)))
 
 ================================================================================
 Date with slashes without the year
@@ -80,8 +73,7 @@ Date with slashes without the year
 
 (source_file
   (transaction
-    (header
-      (date))))
+    (date)))
 
 ================================================================================
 Date with slashes without the year with omitted zeroes
@@ -92,8 +84,7 @@ Date with slashes without the year with omitted zeroes
 
 (source_file
   (transaction
-    (header
-      (date))))
+    (date)))
 
 ================================================================================
 Date with dots
@@ -104,8 +95,7 @@ Date with dots
 
 (source_file
   (transaction
-    (header
-      (date))))
+    (date)))
 
 ================================================================================
 Date with dots with omitted zeroes
@@ -116,8 +106,7 @@ Date with dots with omitted zeroes
 
 (source_file
   (transaction
-    (header
-      (date))))
+    (date)))
 
 ================================================================================
 Date with dots without the year
@@ -128,8 +117,7 @@ Date with dots without the year
 
 (source_file
   (transaction
-    (header
-      (date))))
+    (date)))
 
 ================================================================================
 Date with dots without the year with omitted zeroes
@@ -140,5 +128,4 @@ Date with dots without the year with omitted zeroes
 
 (source_file
   (transaction
-    (header
-      (date))))
+    (date)))

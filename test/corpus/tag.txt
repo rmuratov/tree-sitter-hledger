@@ -8,9 +8,8 @@ Tag without value
 
 (source_file
   (transaction
-    (header
-      (date)
-      (description))
+    (date)
+    (description)
     (comment
       (tag
         (tag_name)))))
@@ -25,9 +24,8 @@ Tag with value
 
 (source_file
   (transaction
-    (header
-      (date)
-      (description))
+    (date)
+    (description)
     (comment
       (tag
         (tag_name)
@@ -43,9 +41,8 @@ Multiple tags
 
 (source_file
   (transaction
-    (header
-      (date)
-      (description))
+    (date)
+    (description)
     (comment
       (tag
         (tag_name)
@@ -64,9 +61,8 @@ Multiple tags with trailing comment text
 
 (source_file
   (transaction
-    (header
-      (date)
-      (description))
+    (date)
+    (description)
     (comment
       (tag
         (tag_name)
@@ -84,12 +80,11 @@ Tag in transaction header
 
 (source_file
   (transaction
-    (header
-      (date)
-      (description)
-      (comment
-        (tag
-          (tag_name))))))
+    (date)
+    (description)
+    (comment
+      (tag
+        (tag_name)))))
 
 ================================================================================
 Tag with value in transaction header
@@ -100,13 +95,12 @@ Tag with value in transaction header
 
 (source_file
   (transaction
-    (header
-      (date)
-      (description)
-      (comment
-        (tag
-          (tag_name)
-          (tag_value))))))
+    (date)
+    (description)
+    (comment
+      (tag
+        (tag_name)
+        (tag_value)))))
 
 ================================================================================
 Tag in posting
@@ -118,9 +112,8 @@ Tag in posting
 
 (source_file
   (transaction
-    (header
-      (date)
-      (description))
+    (date)
+    (description)
     (posting
       (account)
       (amount
@@ -142,9 +135,8 @@ Tag in transaction body comment
 
 (source_file
   (transaction
-    (header
-      (date)
-      (description))
+    (date)
+    (description)
     (comment
       (tag
         (tag_name)
@@ -167,9 +159,8 @@ UTF tags
 
 (source_file
   (transaction
-    (header
-      (date)
-      (description))
+    (date)
+    (description)
     (posting
       (account)
       (amount
@@ -179,3 +170,77 @@ UTF tags
         (tag
           (tag_name)
           (tag_value))))))
+
+================================================================================
+Tag name with digits and hyphens
+================================================================================
+2026-05-15 Description  ; 2026-05-london:
+    a  1
+    b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)
+    (comment
+      (tag
+        (tag_name)))
+    (posting
+      (account)
+      (amount
+        (quantity)))
+    (posting
+      (account))))
+
+================================================================================
+Tag names with punctuation, leading underscore, percent
+================================================================================
+2026-05-15 Description  ; weird.tag+chars: x, _under: y, 100%: z
+    a  1
+    b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)
+    (comment
+      (tag
+        (tag_name)
+        (tag_value))
+      (tag
+        (tag_name)
+        (tag_value))
+      (tag
+        (tag_name)
+        (tag_value)))
+    (posting
+      (account)
+      (amount
+        (quantity)))
+    (posting
+      (account))))
+
+================================================================================
+Word followed by space-colon is not a tag
+================================================================================
+2026-05-15 Description  ; not a tag : because of the space
+    a  1
+    b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)
+    (comment)
+    (posting
+      (account)
+      (amount
+        (quantity)))
+    (posting
+      (account))))

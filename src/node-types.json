@@ -117,25 +117,6 @@
     "fields": {}
   },
   {
-    "type": "description",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "note",
-          "named": true
-        },
-        {
-          "type": "payee",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "directive_account",
     "named": true,
     "fields": {},
@@ -363,47 +344,7 @@
     }
   },
   {
-    "type": "header",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "code",
-          "named": true
-        },
-        {
-          "type": "comment",
-          "named": true
-        },
-        {
-          "type": "date",
-          "named": true
-        },
-        {
-          "type": "description",
-          "named": true
-        },
-        {
-          "type": "secondary_date",
-          "named": true
-        },
-        {
-          "type": "status",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "multiplier",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "payee",
     "named": true,
     "fields": {}
   },
@@ -624,11 +565,19 @@
       "required": true,
       "types": [
         {
+          "type": "code",
+          "named": true
+        },
+        {
           "type": "comment",
           "named": true
         },
         {
-          "type": "header",
+          "type": "date",
+          "named": true
+        },
+        {
+          "type": "description",
           "named": true
         },
         {
@@ -641,6 +590,14 @@
         },
         {
           "type": "posting_virtual_balanced",
+          "named": true
+        },
+        {
+          "type": "secondary_date",
+          "named": true
+        },
+        {
+          "type": "status",
           "named": true
         }
       ]
@@ -743,6 +700,10 @@
     "named": false
   },
   {
+    "type": "description",
+    "named": true
+  },
+  {
     "type": "end aliases",
     "named": false
   },
@@ -759,16 +720,16 @@
     "named": false
   },
   {
-    "type": "note",
-    "named": true
-  },
-  {
     "type": "path",
     "named": true
   },
   {
     "type": "payee",
     "named": false
+  },
+  {
+    "type": "payee",
+    "named": true
   },
   {
     "type": "period_expression",

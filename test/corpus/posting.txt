@@ -8,8 +8,7 @@ A posting
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -26,8 +25,7 @@ Amountless posting
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -46,8 +44,7 @@ Posting with cleared status
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (status)
       (account)
@@ -67,8 +64,7 @@ Posting with pending status
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (status)
       (account)
@@ -88,8 +84,7 @@ Posting with inline comment
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -109,8 +104,7 @@ Posting with status and inline comment
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (status)
       (account)
@@ -131,8 +125,7 @@ Posting with comment directly after amount (no space)
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -154,8 +147,7 @@ Posting with negative amount
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -178,8 +170,7 @@ Multiple postings
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount

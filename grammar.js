@@ -7,16 +7,23 @@
 /// <reference types="tree-sitter-cli/dsl" />
 // @ts-check
 
-const DATE_REGEX = /\d{4}[-/.]\d{1,2}[-/.]\d{1,2}|\d{1,2}[-/.]\d{1,2}/;
+const DATE = /\d{4}[-/.]\d{1,2}[-/.]\d{1,2}|\d{1,2}[-/.]\d{1,2}/;
 
-// Letter-word: used in tag_name and in comment body (non-tag word alternative)
-const WORD = /[a-zA-Z\u0080-\uFFFF][a-zA-Z0-9_\-\u0080-\uFFFF]*/;
+// Tag name: hledger accepts any run of characters except whitespace, colon,
+// and comma, immediately followed by `:` \u2014 e.g. `2026-05-london:`, `100%:`,
+// `\u0442\u0435\u0433:`. The same regex doubles as the plain-word token in comment bodies.
+const TAG_NAME = /[^ \t\n:,]+/;
 
 export default grammar({
   name: "hledger",
 
   // No automatic whitespace skipping — hledger is whitespace-sensitive
   extras: ($) => [],
+
+  // Expanded in place at generate time. This dissolves the rule boundary, so
+  // the whitespace before an inline comment never competes with an optional
+  // whitespace token preceding it in the host rule (e.g. after `status`).
+  inline: ($) => [$._inline_comment],
 
   conflicts: ($) => [
     // after amount, whitespace could be cost/assertion prefix OR comment/newline
@@ -38,7 +45,7 @@ export default grammar({
       repeat(
         choice(
           $.transaction,
-          seq(alias($._raw_comment, $.comment), /\n/),
+          $._comment_line,
           alias($.block_comment, $.comment),
           $.directive_account,
           $.directive_alias,
@@ -51,7 +58,7 @@ export default grammar({
           $.directive_periodic_transaction,
           $.directive_price,
           $.directive_tag,
-          /\n/ // blank line
+          $._eol // blank line (may contain only whitespace)
         )
       ),
 
@@ -66,36 +73,53 @@ export default grammar({
         repeat(
           choice(
             prec(1, $.tag),
-            /[^a-zA-Z\u0080-\uFFFF:,\n]+/, // non-letter, non-colon, non-comma
-            WORD,                            // letter word that is NOT a tag (anonymous)
-            ":",                             // standalone colon (not part of a tag)
+            TAG_NAME, // word that is NOT followed by ':' \u2014 plain text (anonymous)
+            /[ \t]+/, // whitespace between words
+            ":",      // standalone colon (not part of a tag)
             ","
           )
         )
       ),
 
-    // Block comment: "comment\n ... end comment\n"
-    // Each body line is matched by optional(seq(optional(_ws), /.*/)) + '\n'.
-    // The lexer prioritises the specific token('end comment') over the /.*/ body regex
-    // when the parser is in a state where the end marker is valid.
-    block_comment: ($) => blockRule($, "comment"),
+    // Block comment: "comment\n ... end comment\n".
+    // Works without an external scanner: inside the body repeat, both the /.*/
+    // line regex and token('end comment') are valid; the specific token wins
+    // over a regex of equal length, so the terminator stops the repeat.
+    block_comment: ($) =>
+      seq(
+        token("comment"),
+        optional(seq($._ws, /.*/)),
+        "\n",
+        repeat(seq(optional(seq(optional($._ws), /.*/)), "\n")),
+        token("end comment"),
+        /[^\n]*\n/
+      ),
 
     tag: ($) => prec.right(seq($.tag_name, ":", optional($.tag_value))),
-    tag_name: ($) => prec(1, WORD),
+    tag_name: ($) => prec(1, TAG_NAME),
     tag_value: ($) => token(prec(1, /[^,\n]+/)),
 
-    // Opaque raw comment line — no tag parsing. Used for top-level lines and
-    // non-indented lines inside a transaction body.
-    _raw_comment: ($) => /[;#][^\n]*/,
+    // Opaque comment line — no tag parsing. Used for top-level lines and
+    // non-indented lines inside a transaction body. The newline is part of the
+    // token and optional, so a comment on the last line of a file (with no
+    // trailing newline) still parses.
+    _comment_line: ($) => alias(token(/[;#][^\n]*\n?/), $.comment),
+
+    // Indented comment line (tags parsed) — used in transaction bodies and
+    // after account directives.
+    _body_comment: ($) => seq($._ws, $.comment, $._eol),
+
+    // Same-line comment at the end of a line, optionally preceded by whitespace.
+    _inline_comment: ($) => seq(optional($._ws), $.comment),
 
     // =========================================================
     // DATES
     // =========================================================
 
-    date: ($) => DATE_REGEX,
+    date: ($) => DATE,
 
     // secondary_date must immediately follow the primary date (no space before =)
-    secondary_date: ($) => seq("=", DATE_REGEX),
+    secondary_date: ($) => seq("=", DATE),
 
     // =========================================================
     // TRANSACTIONS
@@ -103,22 +127,13 @@ export default grammar({
 
     transaction: ($) =>
       seq(
-        $.header,
-        repeat(
-          choice(
-            $.posting,
-            $.posting_virtual,
-            $.posting_virtual_balanced,
-            $._body_comment,
-            seq(alias($._raw_comment, $.comment), /\n/)
-          )
-        )
+        $._header,
+        repeat(choice($._posting, $._body_comment, $._comment_line))
       ),
 
-    // Indented comment line inside a transaction body (tags parsed)
-    _body_comment: ($) => seq($._ws, $.comment, /\n/),
-
-    header: ($) =>
+    // Hidden: the first line of a transaction. Its children (date, status,
+    // code, description, comment) appear as direct children of `transaction`.
+    _header: ($) =>
       seq(
         $.date,
         optional($.secondary_date),
@@ -128,30 +143,34 @@ export default grammar({
             optional(seq($.status, optional($._ws))),
             optional(seq($.code, $._ws)),
             optional($.description),
-            optional($.comment)
+            optional($._inline_comment)
           )
         ),
-        /\n/
+        $._eol
       ),
 
     status: ($) => choice("*", "!"),
 
     code: ($) => seq("(", /[^)\n]*/, ")"),
 
-    description: ($) =>
-      choice(
-        seq($.payee, /[ \t]*\|[ \t]*/, $.note), // payee | note form
-        seq($.payee, /[ \t]*\|[ \t]*/),          // payee | (no note)
-        /\|[^\n;]*/,                              // | or |note (empty payee)
-        /[^ \t*!(|\n;][^|\n;]*/                  // plain; must not start with space, * ! ( (status/code markers)
-      ),
+    // The full description text, up to `;` (comment) or end of line, with no
+    // trailing whitespace (the final character class forbids it — anything the
+    // token does not take is then consumed by _ws/_eol). hledger's payee|note
+    // split is left to consumers: split on the first `|`, then trim. Must not
+    // start with space/tab or a status/code marker (`*`, `!`, `(`) so those
+    // tokens are never in competition with this regex in the lexer.
+    description: ($) => token(/[^ \t*!(\n;]([^\n;]*[^ \t\n;])?/),
 
-    payee: ($) => /[^ \t*!(|\n;][^|\n;]*/,
-    note: ($) => /[^\n;]+/,
+    // Payee name as declared by the payee directive. Same shape as description
+    // but additionally stops at `|`.
+    payee: ($) => token(/[^ \t*!(|\n;]([^|\n;]*[^ \t|\n;])?/),
 
     // =========================================================
     // POSTINGS
     // =========================================================
+
+    _posting: ($) =>
+      choice($.posting, $.posting_virtual, $.posting_virtual_balanced),
 
     posting: ($) => postingRule($, $.account),
 
@@ -183,31 +202,17 @@ export default grammar({
     amount: ($) =>
       seq(
         optional($.multiplier),
+        optional(seq($.sign, optional($._ws))), // leading sign: -$1, + 100
         choice(
-          // Sign before left-commodity: -$1, +EUR 100, + $1
-          seq(
-            $.sign,
-            optional($._ws),
-            $.commodity,
-            optional($._ws),
-            optional(seq($.sign, optional($._ws))),
-            $.quantity
-          ),
-          // Left-commodity with optional inner sign: $1, EUR 100, $-1, $ 1, $-      1
+          // Left commodity, sign may also appear before the quantity:
+          // $1, EUR 100, $-1, $ - 1
           seq(
             $.commodity,
             optional($._ws),
             optional(seq($.sign, optional($._ws))),
             $.quantity
           ),
-          // Sign before bare quantity, optional right-commodity: -1, +1, -1 USD
-          seq(
-            $.sign,
-            optional($._ws),
-            $.quantity,
-            optional(seq($._ws, $.commodity))
-          ),
-          // Bare quantity, optional right-commodity: 1, 1 USD, 1 000 000.00
+          // Bare quantity with optional right commodity: 1, 1 USD, 1 000 000.00
           seq($.quantity, optional(seq($._ws, $.commodity)))
         )
       ),
@@ -252,7 +257,7 @@ export default grammar({
     directive_account: ($) =>
       seq(
         directiveLine($, "account", $._ws, $.account),
-        repeat(seq($._ws, $.comment, /\n/)) // indented next-line comments
+        repeat($._body_comment) // indented next-line comments
       ),
 
     directive_alias: ($) =>
@@ -262,22 +267,16 @@ export default grammar({
         $.alias_base,
         /[ \t]*=[ \t]*/,
         $.alias_substitute,
-        /\n/
+        $._eol
       ),
 
     alias_base: ($) => /[^\n=]+/,
     alias_substitute: ($) => /[^\n]*/,
 
-    directive_end_aliases: ($) => seq("end aliases", /\n/),
+    directive_end_aliases: ($) => seq("end aliases", $._eol),
 
     directive_auto_posting: ($) =>
-      seq(
-        "=",
-        $._ws,
-        $.query,
-        /\n/,
-        postings($)
-      ),
+      seq("=", $._ws, $.query, $._eol, repeat($._posting)),
 
     query: ($) =>
       token(
@@ -299,12 +298,12 @@ export default grammar({
     directive_decimal_mark: ($) =>
       directiveLine($, "decimal-mark", $._ws, /[.,]/),
 
-    directive_include: ($) => seq("include", $._ws, $.path, /\n/),
+    directive_include: ($) => seq("include", $._ws, $.path, $._eol),
 
     path: ($) => /[^\n]+/,
 
     directive_payee: ($) =>
-      seq("payee", $._ws, $.payee, optional($.comment), /\n/),
+      directiveLine($, "payee", $._ws, $.payee),
 
     directive_periodic_transaction: ($) =>
       seq(
@@ -312,9 +311,9 @@ export default grammar({
         $._ws,
         $.period_expression,
         optional(seq($._ws, $.description)),
-        optional($.comment),
-        /\n/,
-        postings($)
+        optional($._inline_comment),
+        $._eol,
+        repeat($._posting)
       ),
 
     // Opaque period expression: stops at double-space
@@ -327,40 +326,22 @@ export default grammar({
       directiveLine($, "tag", $._ws, $.tag_name),
 
     // =========================================================
-    // WHITESPACE (inline — vanishes from the tree)
+    // WHITESPACE (hidden — vanishes from the tree)
     // =========================================================
 
     _ws: ($) => /[ \t]+/,
+
+    // End of line, absorbing trailing whitespace. Because the lexer prefers the
+    // longest match, _eol beats _ws whenever only whitespace remains before the
+    // newline — so trailing whitespace and whitespace-only "blank" lines parse
+    // cleanly everywhere a line can end.
+    _eol: ($) => /[ \t]*\n/,
   },
 });
 
 // =========================================================
 // HELPERS
 // =========================================================
-
-/**
- * Block directive rule (comment, test, …) — no external scanner needed.
- *
- * Matches:
- *   <keyword>[<ws> <anything>]\n
- *   (<line-content>\n)*
- *   end <keyword>\n
- *
- * Body lines are captured by optional(seq(optional(_ws), any-chars)) + newline.
- * The lexer gives token('end keyword') priority over the general any-chars regex
- * in the repeat body because specific string tokens beat regexes of equal length
- * when both are valid in the current parser state.
- */
-function blockRule($, keyword) {
-  return seq(
-    token(keyword),
-    optional(seq($._ws, /.*/)),
-    "\n",
-    repeat(seq(optional(seq(optional($._ws), /.*/)), "\n")),
-    token(`end ${keyword}`),
-    /[^\n]*\n/
-  );
-}
 
 /**
  * Shared structure for posting, posting_virtual, and posting_virtual_balanced.
@@ -372,19 +353,12 @@ function postingRule($, accountExpr) {
     optional(seq($.status, $._ws)),
     accountExpr,
     optional(seq($._ws, $._posting_amounts)),
-    optional(seq(optional($._ws), $.comment)),
-    /\n/
-  );
-}
-
-/** Repeat of all three posting variants — used in auto-posting and periodic transaction rules. */
-function postings($) {
-  return repeat(
-    choice($.posting, $.posting_virtual, $.posting_virtual_balanced)
+    optional($._inline_comment),
+    $._eol
   );
 }
 
 /** Directive line ending: optional inline comment followed by newline. */
 function directiveLine($, ...content) {
-  return seq(...content, optional(seq($._ws, $.comment)), /\n/);
+  return seq(...content, optional($._inline_comment), $._eol);
 }

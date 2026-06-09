@@ -7,10 +7,9 @@ A transaction with cleared status
 
 (source_file
   (transaction
-    (header
-      (date)
-      (status)
-      (description))))
+    (date)
+    (status)
+    (description)))
 
 ================================================================================
 A transaction with pending status
@@ -21,10 +20,9 @@ A transaction with pending status
 
 (source_file
   (transaction
-    (header
-      (date)
-      (status)
-      (description))))
+    (date)
+    (status)
+    (description)))
 
 ================================================================================
 More spaces around the status
@@ -35,10 +33,9 @@ More spaces around the status
 
 (source_file
   (transaction
-    (header
-      (date)
-      (status)
-      (description))))
+    (date)
+    (status)
+    (description)))
 
 ================================================================================
 Status with no description
@@ -49,9 +46,8 @@ Status with no description
 
 (source_file
   (transaction
-    (header
-      (date)
-      (status))))
+    (date)
+    (status)))
 
 ================================================================================
 Pending status with no description
@@ -62,6 +58,5 @@ Pending status with no description
 
 (source_file
   (transaction
-    (header
-      (date)
-      (status))))
+    (date)
+    (status)))

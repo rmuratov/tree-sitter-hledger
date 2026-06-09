@@ -8,8 +8,7 @@ An amount
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -25,8 +24,7 @@ Simple commodity
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -44,8 +42,7 @@ Left commodity symbol, no space
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -65,8 +62,7 @@ Left commodity symbol, with space
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -86,8 +82,7 @@ Quoted commodity
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -107,8 +102,7 @@ Minus sign before left commodity
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -129,8 +123,7 @@ Minus sign after left commodity
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -151,8 +144,7 @@ Plus sign before bare quantity
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -172,8 +164,7 @@ Plus sign before left commodity
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -194,8 +185,7 @@ Plus sign before left commodity with space
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -216,8 +206,7 @@ Plus sign after left commodity
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -238,8 +227,7 @@ Sign and spaces between commodity and number
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -260,8 +248,7 @@ Scientific notation
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -280,8 +267,7 @@ Scientific notation with left commodity
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -301,8 +287,7 @@ Decimal mark as period
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -321,8 +306,7 @@ Decimal mark as comma
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -341,8 +325,7 @@ Trailing decimal mark
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -361,8 +344,7 @@ Digit group marks with comma
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -382,8 +364,7 @@ Digit group marks with period
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -403,8 +384,7 @@ Digit group marks Indian style
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -424,8 +404,7 @@ Digit group marks with space
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount

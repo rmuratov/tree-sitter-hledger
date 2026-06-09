@@ -9,8 +9,7 @@ Simple transaction
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -29,9 +28,8 @@ Transaction with description and postings
 
 (source_file
   (transaction
-    (header
-      (date)
-      (description))
+    (date)
+    (description)
     (posting
       (account)
       (amount
@@ -55,12 +53,11 @@ Transaction with all optional header fields
 
 (source_file
   (transaction
-    (header
-      (date)
-      (status)
-      (code)
-      (description)
-      (comment))
+    (date)
+    (status)
+    (code)
+    (description)
+    (comment)
     (posting
       (account)
       (amount
@@ -85,9 +82,8 @@ Transaction with body comment
 
 (source_file
   (transaction
-    (header
-      (date)
-      (description))
+    (date)
+    (description)
     (comment)
     (posting
       (account)
@@ -111,9 +107,8 @@ Multiple transactions
 
 (source_file
   (transaction
-    (header
-      (date)
-      (description))
+    (date)
+    (description)
     (posting
       (account)
       (amount
@@ -121,9 +116,61 @@ Multiple transactions
     (posting
       (account)))
   (transaction
-    (header
-      (date)
-      (description))
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount
+        (quantity)))
+    (posting
+      (account))))
+
+================================================================================
+Transactions separated by a whitespace-only line
+================================================================================
+2026-01-01 First
+    Assets  100
+    Expenses
+   
+2026-01-02 Second
+    Assets  200
+    Expenses
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount
+        (quantity)))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount
+        (quantity)))
+    (posting
+      (account))))
+
+================================================================================
+Trailing whitespace after header and posting
+================================================================================
+2026-01-01 Trailing spaces  
+    Assets  100   
+    Expenses	
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)
     (posting
       (account)
       (amount

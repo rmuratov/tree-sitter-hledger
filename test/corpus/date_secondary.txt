@@ -7,9 +7,8 @@ Secondary date with dashes
 
 (source_file
   (transaction
-    (header
-      (date)
-      (secondary_date))))
+    (date)
+    (secondary_date)))
 
 ================================================================================
 Secondary date with dashes with omitted zeroes
@@ -20,9 +19,8 @@ Secondary date with dashes with omitted zeroes
 
 (source_file
   (transaction
-    (header
-      (date)
-      (secondary_date))))
+    (date)
+    (secondary_date)))
 
 ================================================================================
 Secondary date with dashes without the year
@@ -33,9 +31,8 @@ Secondary date with dashes without the year
 
 (source_file
   (transaction
-    (header
-      (date)
-      (secondary_date))))
+    (date)
+    (secondary_date)))
 
 ================================================================================
 Secondary date with dashes without the year with omitted zeroes
@@ -46,9 +43,8 @@ Secondary date with dashes without the year with omitted zeroes
 
 (source_file
   (transaction
-    (header
-      (date)
-      (secondary_date))))
+    (date)
+    (secondary_date)))
 
 ================================================================================
 Secondary date with slashes
@@ -59,9 +55,8 @@ Secondary date with slashes
 
 (source_file
   (transaction
-    (header
-      (date)
-      (secondary_date))))
+    (date)
+    (secondary_date)))
 
 ================================================================================
 Secondary date with slashes with omitted zeroes
@@ -72,9 +67,8 @@ Secondary date with slashes with omitted zeroes
 
 (source_file
   (transaction
-    (header
-      (date)
-      (secondary_date))))
+    (date)
+    (secondary_date)))
 
 ================================================================================
 Secondary date with slashes without the year
@@ -85,9 +79,8 @@ Secondary date with slashes without the year
 
 (source_file
   (transaction
-    (header
-      (date)
-      (secondary_date))))
+    (date)
+    (secondary_date)))
 
 ================================================================================
 Secondary date with slashes without the year with omitted zeroes
@@ -98,9 +91,8 @@ Secondary date with slashes without the year with omitted zeroes
 
 (source_file
   (transaction
-    (header
-      (date)
-      (secondary_date))))
+    (date)
+    (secondary_date)))
 
 ================================================================================
 Secondary date with dots
@@ -111,9 +103,8 @@ Secondary date with dots
 
 (source_file
   (transaction
-    (header
-      (date)
-      (secondary_date))))
+    (date)
+    (secondary_date)))
 
 ================================================================================
 Secondary date with dots with omitted zeroes
@@ -124,9 +115,8 @@ Secondary date with dots with omitted zeroes
 
 (source_file
   (transaction
-    (header
-      (date)
-      (secondary_date))))
+    (date)
+    (secondary_date)))
 
 ================================================================================
 Secondary date with dots without the year
@@ -137,9 +127,8 @@ Secondary date with dots without the year
 
 (source_file
   (transaction
-    (header
-      (date)
-      (secondary_date))))
+    (date)
+    (secondary_date)))
 
 ================================================================================
 Secondary date with dots without the year with omitted zeroes
@@ -150,9 +139,8 @@ Secondary date with dots without the year with omitted zeroes
 
 (source_file
   (transaction
-    (header
-      (date)
-      (secondary_date))))
+    (date)
+    (secondary_date)))
 
 ================================================================================
 Negative secondary date case
@@ -163,6 +151,5 @@ Negative secondary date case
 
 (source_file
   (transaction
-    (header
-      (date)
-      (description))))
+    (date)
+    (description)))

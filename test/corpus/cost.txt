@@ -9,9 +9,8 @@ Unit cost (@)
 
 (source_file
   (transaction
-    (header
-      (date)
-      (description))
+    (date)
+    (description)
     (posting
       (account))
     (posting
@@ -36,9 +35,8 @@ Total cost (@@)
 
 (source_file
   (transaction
-    (header
-      (date)
-      (description))
+    (date)
+    (description)
     (posting
       (account))
     (posting
@@ -63,9 +61,8 @@ Cost with balance assertion
 
 (source_file
   (transaction
-    (header
-      (date)
-      (description))
+    (date)
+    (description)
     (posting
       (account)
       (amount
@@ -99,9 +96,8 @@ Cost with right-side commodity
 
 (source_file
   (transaction
-    (header
-      (date)
-      (description))
+    (date)
+    (description)
     (posting
       (account))
     (posting

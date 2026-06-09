@@ -63,19 +63,23 @@ Used during development to test real-world hledger input. It's a valid hledger j
 
 These conventions are established across all corpus files:
 
-- **Signs:** `(negative)` and `(positive)` are always explicit separate nodes, never absorbed into `quantity` or `commodity`. Position mirrors the source: before `commodity` if the sign precedes it, between `commodity` and `quantity` if the sign appears there.
-  - `-$1` → `(amount (negative) (commodity) (quantity))`
-  - `$-1` → `(amount (commodity) (negative) (quantity))`
-  - `+$1` → `(amount (positive) (commodity) (quantity))`
+- **Signs:** `(sign)` is an explicit separate node (for both `+` and `-`), never absorbed into `quantity` or `commodity`. Position mirrors the source: before `commodity` if the sign precedes it, between `commodity` and `quantity` if it appears there.
+  - `-$1` → `(amount (sign) (commodity) (quantity))`
+  - `$-1` → `(amount (commodity) (sign) (quantity))`
+  - `+$1` → `(amount (sign) (commodity) (quantity))`
+- **Status:** a single `(status)` node for both `*` (cleared) and `!` (pending).
+- **Transactions are flat:** there is no `header` node. `date`, `secondary_date`, `status`, `code`, `description`, and the first-line `comment` are direct children of `transaction`, followed by postings and body comments. (The grammar still groups the first line in a hidden `_header` rule for readability.) Note: a same-line header comment and an indented body comment are not structurally distinguishable — hledger treats both as transaction comments, so the distinction carries no semantic weight; consumers that care about layout can compare row positions.
 - **Multiply amounts** (auto postings only): `(multiplier)` node, same positional rule.
-  - `*-1` → `(amount (multiplier) (negative) (quantity))`
+  - `*-1` → `(amount (multiplier) (sign) (quantity))`
   - `*$2` → `(amount (multiplier) (commodity) (quantity))`
 - **Commodity placement:** left-side symbol → `(commodity)(quantity)`; right-side word → `(quantity)(commodity)`.
 - **Comments:** single `(comment)` node for all comment forms (block, top-level line, inline). Tags are children of `comment`: `(comment (tag (tag_name) (tag_value)))`.
+- **Tag names:** match hledger's actual rule — any run of characters except whitespace, `:`, and `,`, immediately followed by `:`. Names like `2026-05-london`, `100%`, `_under`, and `тег` are valid; a space before the colon means no tag.
 - **Tag values:** start immediately after `:` or after `:` and optional whitespace; end at the next `,` or end of line. Values can contain spaces.
 - **Directives:** corpus files are named `directive_<name>.txt`. Directive nodes are named `directive_<name>` (e.g. `directive_account`, `directive_alias`).
 - **Virtual postings:** `posting_virtual` for `(account)` (unbalanced), `posting_virtual_balanced` for `[account]` (balanced).
-- **Opaque expression nodes:** `period_expression` (periodic transaction rules) and `query` (auto posting rules) are single unparsed nodes — no children.
+- **Opaque expression nodes:** `description` (the `payee | note` split is left to consumers), `period_expression` (periodic transaction rules), and `query` (auto posting rules) are single unparsed nodes — no children. The `payee` node exists only inside `directive_payee`.
+- **No trailing whitespace in leaf nodes:** free-text tokens (`description`, `payee`) end on a non-space character; trailing whitespace belongs to `_ws`/`_eol`.
 
 ### Bindings
 
@@ -102,7 +106,21 @@ Tree-sitter normally skips whitespace automatically. This grammar disables that 
 - `secondary_date` attaches directly to `date` with no space (`2026-01-24=01-25`)
 - Double-space separates account name from amount (a single space is part of the account name)
 
-**Consequence:** every rule that spans a line must include `$._ws` separators and a trailing `/\n/` explicitly. `_ws` is a private named rule (`_ws: $ => /[ \t]+/`) used throughout the grammar in place of the literal `/[ \t]+/`; the leading `_` hides it from the parse tree.
+**Consequence:** every rule that spans a line must include `$._ws` separators and a trailing `$._eol` explicitly. Both are private named rules hidden from the parse tree:
+
+- `_ws: $ => /[ \t]+/` — inline whitespace separator
+- `_eol: $ => /[ \t]*\n/` — end of line, absorbing trailing whitespace
+
+### `_eol` absorbs trailing whitespace and whitespace-only lines
+
+Line endings use `_eol` (`/[ \t]*\n/`), not a bare `/\n/`. Because the lexer prefers the longest match, `_eol` beats `_ws` whenever only whitespace remains before the newline. This makes two real-world cases parse cleanly that a bare `/\n/` rejects with ERROR nodes:
+
+- trailing whitespace at the end of any line (`    Expenses\t\n`)
+- "blank" separator lines that contain only spaces/tabs (`   \n`) — `_eol` is also the blank-line alternative in `source_file`
+
+A useful side effect: trailing spaces are excluded from `comment` and similar nodes, since `_eol`'s longer match wins them away from the content regexes.
+
+The raw comment token in `_comment_line` includes its own optional newline (`/[;#][^\n]*\n?/`) so a comment on the last line of a file with no trailing newline still parses. Other missing-final-newline cases (transactions, directives) are handled acceptably by tree-sitter's missing-token recovery. Known limitation: a file ending in bare whitespace with no final newline produces a small ERROR node at EOF — supporting it would require GLR conflicts on every posting line, which is not worth the parse-speed cost.
 
 ### Nullable tokens cause infinite parse loops
 
@@ -111,7 +129,7 @@ Tree-sitter normally skips whitespace automatically. This grammar disables that 
 Rules that triggered this during development:
 - `payee: $ => /[^|\n;]*/` — zero chars allowed → loop. Fixed: `/[^*!(|\n;][^|\n;]*/` (requires 1+ chars)
 - `note: $ => /[^\n;]*/` — zero chars allowed → loop. Fixed: `/[^\n;]+/`
-- `optional(/[ \t]*/)` inside `header` and `directive_payee` — `/[ \t]*/` produces a zero-length `header_token1` token → loop. Fixed: replaced with `optional(/[ \t]+/)` or removed entirely.
+- `optional(/[ \t]*/)` inside `_header` and `directive_payee` — `/[ \t]*/` produces a zero-length token → loop. Fixed: replaced with `optional(/[ \t]+/)` or removed entirely.
 
 **Rule:** every named rule and every regex inside `optional(...)` must be non-nullable (must match at least one character).
 
@@ -123,7 +141,7 @@ This caused status markers (`*`, `!`) to be swallowed by description/account reg
 
 ### Tag value lexer priority
 
-`tag_value: $ => token(prec(1, /[^,\n]+/))` must use `token(prec(1, ...))` — not a bare regex. Without it, `tag_value` ties with anonymous comment tokens (e.g., `/[^a-zA-Z:,\n]+/`) when the value starts with non-alpha chars like `12345` or `currency`. Equal-length ties are resolved by priority; without the `prec(1, ...)`, the wrong token wins and `(tag_value)` nodes are missing from the AST.
+`tag_value: $ => token(prec(1, /[^,\n]+/))` must use `token(prec(1, ...))` — not a bare regex. Without it, `tag_value` ties with the anonymous comment-body tokens (the plain-word `TAG_NAME` regex and the whitespace filler) when the value is the same length as what those would match. Equal-length ties are resolved by priority; without the `prec(1, ...)`, the wrong token wins and `(tag_value)` nodes are missing from the AST. `tag_name` carries `prec(1, ...)` for the same reason — it ties with the identical plain-word regex in the comment body, and the parser then decides tag-vs-plain by whether `:` follows.
 
 ### `prec.right` on `tag` rule
 
@@ -143,30 +161,28 @@ Combined with `[$.amount, $.amount]` for the left-commodity vs right-commodity a
 
 ### Status markers and trailing space
 
-In the `header` rule, the space after a status marker is `optional($._ws)` — it is consumed when present but can be absent when status is the last token before `\n` (e.g., `2026-01-24 *`):
+In the `_header` rule, the space after a status marker is `optional($._ws)` — it is consumed when present but can be absent when status is the last token before `\n` (e.g., `2026-01-24 *`):
 
 ```javascript
-optional(seq(choice($.status_cleared, $.status_pending), optional($._ws)))
+optional(seq($.status, optional($._ws)))
 ```
 
-This is safe because `description` and `payee` exclude space/tab from their first character (`/[^ \t*!(|\n;][^|\n;]*/`). That exclusion forces the LR parser to always shift the space into the separator — there is no path where description accidentally absorbs a leading space — so the shift-reduce conflict resolves correctly.
+This is safe because `description` and `payee` exclude space/tab from their first character. That exclusion forces the LR parser to always shift the space into the separator — there is no path where description accidentally absorbs a leading space — so the shift-reduce conflict resolves correctly.
 
 In the `posting` rule the space after status is still required (`$._ws`) because a posting status is always followed by an account name (postings without an account are invalid), so the end-of-line case does not arise there.
 
-### Description rule: all pipe variants
+### Description is a single token — no payee/note split
 
-`description` must handle all four `payee|note` combinations:
+`description` is one opaque token; hledger's `payee | note` split is left to consumers (split on the first `|`, then trim). The grammar previously had `(payee)`/`(note)` children, but that structure was buggy and got removed:
 
-```javascript
-description: $ => choice(
-  seq($.payee, /[ \t]*\|[ \t]*/, $.note),  // Payee | Note  (both present)
-  seq($.payee, /[ \t]*\|[ \t]*/),          // Payee |       (no note)
-  /\|[^\n;]*/,                              // | or |Note    (no payee)
-  /[^*!(|\n;][^|\n;]*/,                    // plain text    (no pipe)
-),
-```
+- `payee` always captured the whitespace before `|` (the lexer's longest match gave it to the greedy payee regex, not the separator), while `note` had its leading whitespace stripped — asymmetric extents.
+- with an empty payee (`2026-01-24 | note`), the note text got **no** `(note)` node at all, so consumers couldn't rely on the children existing.
 
-Without the third alternative, `2026-01-24 |` (empty payee, empty note) produces an ERROR node.
+The `payee` node still exists, but only as the child of `directive_payee`.
+
+### Leaf tokens never end in whitespace
+
+`description` and `payee` use the pattern `/<first-char>(<body>*<non-space-char>)?/` — the token must end on a non-space character. Whatever whitespace the token refuses is then consumed by `_ws` (before an inline comment) or `_eol` (at end of line). The `_inline_comment` hidden rule (`seq(optional($._ws), $.comment)`) is the standard line tail; it is listed in `inline: $ => [...]` because inlining dissolves the rule boundary — otherwise the optional whitespace after `status` and the optional whitespace before the comment create an unresolvable ambiguity.
 
 ### `tag_value` ends at comma, not just newline
 
@@ -184,28 +200,28 @@ Tree-sitter warns about conflicts listed in `conflicts: $ => [...]` that it can 
 
 ```javascript
 conflicts: $ => [
-  [$._posting_amounts],   // genuinely ambiguous: whitespace after amount
-  [$.amount, $.amount],   // genuinely ambiguous: left vs right commodity
+  [$._posting_amounts],   // whitespace after amount: cost/assertion vs comment/newline
+  [$.amount, $.amount],   // left-commodity vs right-commodity form
+  [$.assertion],          // whitespace after assertion amount: cost prefix vs end
+  [$.transaction],        // bare ';' after the first line: body comment vs top-level comment
 ],
 ```
 
-The conflicts `[$.tag, $.comment]`, `[$.comment, $.tag_name]`, and `[$.description, $.payee]` were found to be unnecessary and were removed.
+All four were re-verified as genuinely needed (removing any of them makes `tree-sitter generate` fail with an unresolved conflict). The conflicts `[$.tag, $.comment]`, `[$.comment, $.tag_name]`, and `[$.description, $.payee]` were found to be unnecessary and were removed.
 
 ### Block comments use a pure grammar rule
 
-Block comments (`comment ... end comment`) are handled entirely in `grammar.js` via the `blockRule()` helper — no external scanner. The pattern is:
+Block comments (`comment ... end comment`) are handled entirely in `grammar.js` by the `block_comment` rule — no external scanner. The pattern is:
 
 ```javascript
-function blockRule($, keyword) {
-  return seq(
-    token(keyword),                                              // opening keyword
-    optional(seq($._ws, /.*/)),                                 // optional text on opening line
-    '\n',
-    repeat(seq(optional(seq(optional($._ws), /.*/)), '\n')),    // body lines
-    token(`end ${keyword}`),                                    // terminator
-    /[^\n]*\n/,                                                 // trailing text + newline
-  );
-}
+block_comment: $ => seq(
+  token('comment'),                                           // opening keyword
+  optional(seq($._ws, /.*/)),                                 // optional text on opening line
+  '\n',
+  repeat(seq(optional(seq(optional($._ws), /.*/)), '\n')),    // body lines
+  token('end comment'),                                       // terminator
+  /[^\n]*\n/,                                                 // trailing text + newline
+),
 ```
 
 **Why this works without a scanner:** tree-sitter's lexer considers which tokens are valid in the current parser state. Inside the body `repeat`, both `/.*/` (the body line match) and `token('end comment')` are potentially valid when the parser sees `end comment` at the start of a line. The specific `token()` string is preferred over the general regex, so the terminator wins and the repeat stops.
@@ -215,7 +231,7 @@ function blockRule($, keyword) {
 ### Account name regex
 
 ```javascript
-account: $ => /[^ \t\n;#@=()\[\]*!]([^ \t\n;#@=()\[\]]| [^ \t\n;#@=()\[\]])*/,
+account: $ => /[^ \t\n;#@=()\[\]*!][^ \t\n;#@=()\[\]]*( [^ \t\n;#@=()\[\]]+)*/,
 ```
 
-The alternation `(single-space followed by non-space)` in the repeat is what allows internal single spaces while stopping at double-space. It also excludes `*` and `!` from the first character (to prevent consuming status markers).
+The trailing `( [^...]+)*` group is what allows internal single spaces while stopping at double-space. The first character class also excludes `*` and `!` (to prevent consuming status markers).

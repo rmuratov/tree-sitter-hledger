@@ -9,8 +9,7 @@ Single-commodity assertion (=)
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -41,8 +40,7 @@ Sole commodity assertion (==)
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -71,8 +69,7 @@ Balance assignment with cost
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (assertion
@@ -101,8 +98,7 @@ Subaccount-inclusive assertion (=*)
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account)
       (amount
@@ -143,8 +139,7 @@ Subaccount-inclusive sole commodity assertion (==*)
 
 (source_file
   (transaction
-    (header
-      (date))
+    (date)
     (posting
       (account))
     (posting

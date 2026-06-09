@@ -7,10 +7,9 @@ A code
 
 (source_file
   (transaction
-    (header
-      (date)
-      (code)
-      (description))))
+    (date)
+    (code)
+    (description)))
 
 ================================================================================
 A code with spaces
@@ -21,10 +20,9 @@ A code with spaces
 
 (source_file
   (transaction
-    (header
-      (date)
-      (code)
-      (description))))
+    (date)
+    (code)
+    (description)))
 
 ================================================================================
 A code after status
@@ -37,14 +35,12 @@ A code after status
 
 (source_file
   (transaction
-    (header
-      (date)
-      (status)
-      (code)
-      (description)))
+    (date)
+    (status)
+    (code)
+    (description))
   (transaction
-    (header
-      (date)
-      (status)
-      (code)
-      (description))))
+    (date)
+    (status)
+    (code)
+    (description)))
