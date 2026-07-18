@@ -1,18 +1,10 @@
 # tree-sitter-hledger
 
-[Tree-sitter](https://tree-sitter.github.io/tree-sitter/) grammar for [hledger](https://hledger.org/) journal files.
+[Tree-sitter](https://tree-sitter.github.io/tree-sitter/) grammar for [hledger](https://hledger.org/) journal files. It covers hledger's native journal syntax and is ready for syntax highlighting, structural editing, and tooling in Tree-sitter-based editors and applications. The grammar is exercised by a corpus test suite, and its development playground journal is kept valid against hledger itself (`hledger print`).
 
-## Features
+It targets **hledger's native journal syntax only** — syntax that exists for [Ledger](https://ledger-cli.org/) compatibility is deliberately out of scope; see [Unsupported features](#unsupported-features).
 
-- Parses `hledger` journal syntax
-- Intended for syntax highlighting, structural editing, and tooling
-- Works with Tree-sitter-based editors and applications
-
-## Status
-
-Early-stage grammar for `hledger` journals. Coverage and node names may change as the grammar evolves.
-
-This grammar targets **hledger's native journal syntax only**. Ledger-compatible syntax is not supported.
+> This grammar was heavily vibe coded. The initial test suite, however, was prepared manually, and the constructs it covers are validated against hledger itself.
 
 ## Usage
 
@@ -64,21 +56,40 @@ hledger print --file=playground.hledger
 
 ## Supported syntax
 
-This grammar aims to support common `hledger` journal constructs, including:
+- **Transactions** — dates (including secondary dates `DATE=DATE2`), status marks (`*`, `!`), codes `(...)`, descriptions, same-line and body comments
+- **Postings** — real, virtual `(account)`, and balanced virtual `[account]` postings; posting status; account names with internal single spaces
+- **Amounts** — left/right commodity placement, quoted commodities, signs in all positions, digit grouping (comma, period, or space), scientific notation
+- **Costs and assertions** — `@` / `@@` costs; balance assertions `=`, `==`, `=*`, `==*` (with optional cost); balance assignments (assertion with no posting amount)
+- **Comments and tags** — `;` and `#` line comments, inline comments, `comment ... end comment` blocks, and `name:value` tags inside comments
+- **Directives** — `account`, `alias` / `end aliases`, `commodity` (with `format` subdirective), `decimal-mark`, `include`, `payee`, `tag`, `P` (market price), `~` (periodic transaction rules), `=` (auto posting rules)
 
-- Dates and transaction headers
-- Postings and account names
-- Amounts and commodities
-- Comments
-- Directives and basic journal structure
+A few of these (secondary dates, virtual postings, balance assignments) technically appear in hledger's "Other syntax" section, but they are widely used by hledger users, so the grammar supports them.
+
+## Unsupported features
+
+hledger accepts a number of constructs "mainly to make interoperating with or converting from Ledger easier" ([Other syntax](https://hledger.org/1.52/hledger.html#other-syntax)). These are intentionally not supported and will produce parse errors (or, inside comments, plain unstructured text):
+
+- **`D`** (default commodity) directive
+- **`Y`** / `year` / `apply year` (default year) directives
+- **`apply account`** / `end apply account` (default parent account)
+- **Star comments** — comment lines beginning with `*` (Emacs org headings)
+- **Bracketed posting dates** — `[DATE]` / `[DATE=DATE2]` in posting comments; these parse as plain comment text (use hledger's native `date:` / `date2:` tags instead, which parse as regular tags)
+- **Valuation expressions** — `((...))` after amounts
+- **Ledger virtual costs** — `(@)` / `(@@)`
+- **Ledger lot syntax** — lot prices `{COST}`, fixed lot costs `{=COST}`, lot dates, and lot notes
+- **Other ignored Ledger directives** — `apply fixed`, `apply tag`, `assert`, `bucket`, `capture`, `check`, `define`, `eval`, `expr`, `python`, `value`, `tag` blocks with `end tag`, `end apply fixed`, `end apply tag`, `--command-line-flags`
+
+If hledger ever promotes one of these to native syntax, it becomes fair game — file an issue.
 
 ## Project structure
 
 ```text
 grammar.js          Tree-sitter grammar definition
-src/                Generated parser sources
-corpus/             Grammar test cases
-bindings/           Language bindings (if present)
+src/                Generated parser sources (do not edit)
+test/corpus/        Grammar test cases
+queries/            Editor queries (syntax highlighting)
+bindings/           Generated language bindings
+playground.hledger  Development journal, kept valid per hledger itself
 ```
 
 ## Editor integration
