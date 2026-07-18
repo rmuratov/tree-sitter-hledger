@@ -141,7 +141,7 @@ export default grammar({
           seq(
             $._ws,
             optional(seq($.status, optional($._ws))),
-            optional(seq($.code, $._ws)),
+            optional(seq($.code, optional($._ws))),
             optional($.description),
             optional($._inline_comment)
           )
@@ -266,12 +266,12 @@ export default grammar({
         $._ws,
         $.alias_base,
         /[ \t]*=[ \t]*/,
-        $.alias_substitute,
+        optional($.alias_substitute),
         $._eol
       ),
 
-    alias_base: ($) => /[^\n=]+/,
-    alias_substitute: ($) => /[^\n]*/,
+    alias_base: ($) => /[^ \t\n=]([^\n=]*[^ \t\n=])?/,
+    alias_substitute: ($) => /[^ \t\n]([^\n]*[^ \t\n])?/,
 
     directive_end_aliases: ($) => seq("end aliases", $._eol),
 
@@ -281,8 +281,8 @@ export default grammar({
     query: ($) =>
       token(
         choice(
-          /\'[^'\n]*\'/, // single-quoted: 'expenses:food drinks'
-          /[^'\n][^\n]*/ // unquoted (doesn't start with ')
+          /'[^'\n]*'/, // single-quoted: 'expenses:food drinks'
+          /[^' \t\n]([^\n]*[^ \t\n])?/ // unquoted (doesn't start with ')
         )
       ),
 
@@ -300,7 +300,9 @@ export default grammar({
 
     directive_include: ($) => seq("include", $._ws, $.path, $._eol),
 
-    path: ($) => /[^\n]+/,
+    // The rest of the line, including any `;` — hledger treats it all as the
+    // file glob pattern, so inline comments are not possible here.
+    path: ($) => /[^ \t\n]([^\n]*[^ \t\n])?/,
 
     directive_payee: ($) =>
       directiveLine($, "payee", $._ws, $.payee),
@@ -358,7 +360,7 @@ function postingRule($, accountExpr) {
   );
 }
 
-/** Directive line ending: optional inline comment followed by newline. */
+/** Wraps a directive's line content, appending the standard line tail: an optional inline comment and the newline. */
 function directiveLine($, ...content) {
   return seq(...content, optional($._inline_comment), $._eol);
 }

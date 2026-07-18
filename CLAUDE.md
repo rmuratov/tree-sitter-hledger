@@ -5,7 +5,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-# Install dependencies
+# Install dependencies. If the native addon build fails (e.g. on newer Node
+# versions node-gyp errors out), skip build scripts and fetch just the CLI:
+#   npm install --ignore-scripts && npm rebuild tree-sitter-cli
 npm install
 
 # Generate the parser from grammar.js (required after any grammar change)
@@ -79,7 +81,7 @@ These conventions are established across all corpus files:
 - **Directives:** corpus files are named `directive_<name>.txt`. Directive nodes are named `directive_<name>` (e.g. `directive_account`, `directive_alias`).
 - **Virtual postings:** `posting_virtual` for `(account)` (unbalanced), `posting_virtual_balanced` for `[account]` (balanced).
 - **Opaque expression nodes:** `description` (the `payee | note` split is left to consumers), `period_expression` (periodic transaction rules), and `query` (auto posting rules) are single unparsed nodes — no children. The `payee` node exists only inside `directive_payee`.
-- **No trailing whitespace in leaf nodes:** free-text tokens (`description`, `payee`) end on a non-space character; trailing whitespace belongs to `_ws`/`_eol`.
+- **No trailing whitespace in leaf nodes:** free-text tokens (`description`, `payee`, `alias_base`, `alias_substitute`, `path`, `query`) end on a non-space character; trailing whitespace belongs to `_ws`/`_eol`. An empty `alias_substitute` (`alias foo =`) produces no node at all, never a zero-width one.
 
 ### Bindings
 
@@ -182,7 +184,7 @@ The `payee` node still exists, but only as the child of `directive_payee`.
 
 ### Leaf tokens never end in whitespace
 
-`description` and `payee` use the pattern `/<first-char>(<body>*<non-space-char>)?/` — the token must end on a non-space character. Whatever whitespace the token refuses is then consumed by `_ws` (before an inline comment) or `_eol` (at end of line). The `_inline_comment` hidden rule (`seq(optional($._ws), $.comment)`) is the standard line tail; it is listed in `inline: $ => [...]` because inlining dissolves the rule boundary — otherwise the optional whitespace after `status` and the optional whitespace before the comment create an unresolvable ambiguity.
+Free-text tokens (`description`, `payee`, `alias_base`, `alias_substitute`, `path`, the unquoted `query`) use the pattern `/<first-char>(<body>*<non-space-char>)?/` — the token must end on a non-space character. Whatever whitespace the token refuses is then consumed by `_ws` (before an inline comment) or `_eol` (at end of line). The `_inline_comment` hidden rule (`seq(optional($._ws), $.comment)`) is the standard line tail; it is listed in `inline: $ => [...]` because inlining dissolves the rule boundary — otherwise the optional whitespace after `status` and the optional whitespace before the comment create an unresolvable ambiguity.
 
 ### `tag_value` ends at comma, not just newline
 
@@ -227,6 +229,10 @@ block_comment: $ => seq(
 **Why this works without a scanner:** tree-sitter's lexer considers which tokens are valid in the current parser state. Inside the body `repeat`, both `/.*/` (the body line match) and `token('end comment')` are potentially valid when the parser sees `end comment` at the start of a line. The specific `token()` string is preferred over the general regex, so the terminator wins and the repeat stops.
 
 **The nullable-token rule does not apply here** because `/.*/` is an anonymous inline regex (not a named rule), and each iteration of the repeat always advances by at least one `'\n'` — so the parser can never get stuck in a zero-length loop.
+
+### Amounts accept double signs (intentional)
+
+The optional `sign` before the commodity and the optional `sign` between commodity and quantity are independent, so `-$-1` parses with two `(sign)` nodes even though hledger rejects it. This permissiveness is deliberate — an editor grammar should produce a usable tree for in-progress input, and validating sign count is a linter's job, not the parser's.
 
 ### Account name regex
 

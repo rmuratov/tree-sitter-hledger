@@ -418,8 +418,16 @@
                           "name": "code"
                         },
                         {
-                          "type": "SYMBOL",
-                          "name": "_ws"
+                          "type": "CHOICE",
+                          "members": [
+                            {
+                              "type": "SYMBOL",
+                              "name": "_ws"
+                            },
+                            {
+                              "type": "BLANK"
+                            }
+                          ]
                         }
                       ]
                     },
@@ -1219,8 +1227,16 @@
           "value": "[ \\t]*=[ \\t]*"
         },
         {
-          "type": "SYMBOL",
-          "name": "alias_substitute"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "alias_substitute"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         },
         {
           "type": "SYMBOL",
@@ -1230,11 +1246,11 @@
     },
     "alias_base": {
       "type": "PATTERN",
-      "value": "[^\\n=]+"
+      "value": "[^ \\t\\n=]([^\\n=]*[^ \\t\\n=])?"
     },
     "alias_substitute": {
       "type": "PATTERN",
-      "value": "[^\\n]*"
+      "value": "[^ \\t\\n]([^\\n]*[^ \\t\\n])?"
     },
     "directive_end_aliases": {
       "type": "SEQ",
@@ -1284,11 +1300,11 @@
         "members": [
           {
             "type": "PATTERN",
-            "value": "\\'[^'\\n]*\\'"
+            "value": "'[^'\\n]*'"
           },
           {
             "type": "PATTERN",
-            "value": "[^'\\n][^\\n]*"
+            "value": "[^' \\t\\n]([^\\n]*[^ \\t\\n])?"
           }
         ]
       }
@@ -1449,7 +1465,7 @@
     },
     "path": {
       "type": "PATTERN",
-      "value": "[^\\n]+"
+      "value": "[^ \\t\\n]([^\\n]*[^ \\t\\n])?"
     },
     "directive_payee": {
       "type": "SEQ",

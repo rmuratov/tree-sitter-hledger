@@ -1,5 +1,10 @@
 [
   {
+    "type": "alias_substitute",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "amount",
     "named": true,
     "fields": {},
@@ -349,6 +354,11 @@
     "fields": {}
   },
   {
+    "type": "path",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "posting",
     "named": true,
     "fields": {},
@@ -672,10 +682,6 @@
     "named": true
   },
   {
-    "type": "alias_substitute",
-    "named": true
-  },
-  {
     "type": "assertion_operator",
     "named": true
   },
@@ -718,10 +724,6 @@
   {
     "type": "include",
     "named": false
-  },
-  {
-    "type": "path",
-    "named": true
   },
   {
     "type": "payee",
