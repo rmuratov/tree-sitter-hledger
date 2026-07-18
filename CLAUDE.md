@@ -75,12 +75,11 @@ These conventions are established across all corpus files:
   - `*-1` → `(amount (multiplier) (sign) (quantity))`
   - `*$2` → `(amount (multiplier) (commodity) (quantity))`
 - **Commodity placement:** left-side symbol → `(commodity)(quantity)`; right-side word → `(quantity)(commodity)`.
-- **Comments:** single `(comment)` node for all comment forms (block, top-level line, inline). Tags are children of `comment`: `(comment (tag (tag_name) (tag_value)))`.
-- **Tag names:** match hledger's actual rule — any run of characters except whitespace, `:`, and `,`, immediately followed by `:`. Names like `2026-05-london`, `100%`, `_under`, and `тег` are valid; a space before the colon means no tag.
-- **Tag values:** start immediately after `:` or after `:` and optional whitespace; end at the next `,` or end of line. Values can contain spaces.
+- **Comments:** single `(comment)` node for all comment forms (block, top-level line, inline). Tags are children of `comment`: `(comment (tag))`.
+- **Tags:** a `(tag)` is one opaque `name:value` node — the name/value split is left to consumers (split on the first `:`, then trim). The name matches hledger's actual rule — any run of characters except whitespace, `:`, and `,`, immediately followed by `:`; names like `2026-05-london`, `100%`, `_under`, and `тег` are valid, and a space before the colon means no tag. The value ends at the next `,` or end of line and can contain spaces. The `tag_name` node exists only inside `directive_tag`.
 - **Directives:** corpus files are named `directive_<name>.txt`. Directive nodes are named `directive_<name>` (e.g. `directive_account`, `directive_alias`).
 - **Virtual postings:** `posting_virtual` for `(account)` (unbalanced), `posting_virtual_balanced` for `[account]` (balanced).
-- **Opaque expression nodes:** `description` (the `payee | note` split is left to consumers), `period_expression` (periodic transaction rules), and `query` (auto posting rules) are single unparsed nodes — no children. The `payee` node exists only inside `directive_payee`.
+- **Opaque expression nodes:** `description` (the `payee | note` split is left to consumers), `tag` (`name:value`, split likewise left to consumers), `period_expression` (periodic transaction rules), and `query` (auto posting rules) are single unparsed nodes — no children. The `payee` node exists only inside `directive_payee`.
 - **No trailing whitespace in leaf nodes:** free-text tokens (`description`, `payee`, `alias_base`, `alias_substitute`, `path`, `query`) end on a non-space character; trailing whitespace belongs to `_ws`/`_eol`. An empty `alias_substitute` (`alias foo =`) produces no node at all, never a zero-width one.
 
 ### Bindings
@@ -141,17 +140,9 @@ Tree-sitter's lexer picks the token with the **longest match**. `token(prec(N, .
 
 This caused status markers (`*`, `!`) to be swallowed by description/account regexes (a 1-char `*` lost to an N-char description match). The fix was **not** to give `*` higher priority, but to exclude `*`, `!`, and `(` from the first character of `description`, `payee`, and `account` regexes. That way those chars are never in competition.
 
-### Tag value lexer priority
+### Tags are a single token — no lexer precedence needed
 
-`tag_value: $ => token(prec(1, /[^,\n]+/))` must use `token(prec(1, ...))` — not a bare regex. Without it, `tag_value` ties with the anonymous comment-body tokens (the plain-word `TAG_NAME` regex and the whitespace filler) when the value is the same length as what those would match. Equal-length ties are resolved by priority; without the `prec(1, ...)`, the wrong token wins and `(tag_value)` nodes are missing from the AST. `tag_name` carries `prec(1, ...)` for the same reason — it ties with the identical plain-word regex in the comment body, and the parser then decides tag-vs-plain by whether `:` follows.
-
-### `prec.right` on `tag` rule
-
-```javascript
-tag: $ => prec.right(seq($.tag_name, ':', optional($.tag_value))),
-```
-
-Without `prec.right`, after `tag_name ':'` the parser may reduce the tag immediately (leaving `tag_value` absent) instead of shifting to consume the value. `prec.right` says "prefer shift over reduce" in shift-reduce conflicts, ensuring the value is consumed when present.
+`tag: $ => token(/[^ \t\n:,]+:([^,\n]*[^ ,\t\n])?/)` — the whole `name:value` is one token that stops at `,` (so comma-separated tags on one line work) and ends on a non-space character. Because it is strictly longer than the plain-word `TAG_NAME` match whenever a colon immediately follows the word, maximal munch alone decides tag-vs-plain-text — no `prec` on any comment-body token and no shift/reduce tuning. An earlier design with `(tag_name)`/`(tag_value)` children needed `token(prec(1, ...))` on both plus `prec.right` on `tag` to beat equal-length ties against the anonymous comment-body tokens; collapsing the tag to one token dissolved all of that.
 
 ### GLR conflicts: `[$._posting_amounts]` singleton
 
@@ -185,16 +176,6 @@ The `payee` node still exists, but only as the child of `directive_payee`.
 ### Leaf tokens never end in whitespace
 
 Free-text tokens (`description`, `payee`, `alias_base`, `alias_substitute`, `path`, the unquoted `query`) use the pattern `/<first-char>(<body>*<non-space-char>)?/` — the token must end on a non-space character. Whatever whitespace the token refuses is then consumed by `_ws` (before an inline comment) or `_eol` (at end of line). The `_inline_comment` hidden rule (`seq(optional($._ws), $.comment)`) is the standard line tail; it is listed in `inline: $ => [...]` because inlining dissolves the rule boundary — otherwise the optional whitespace after `status` and the optional whitespace before the comment create an unresolvable ambiguity.
-
-### `tag_value` ends at comma, not just newline
-
-`tag_value: $ => token(prec(1, /[^,\n]+/))` — stops at `,` so that multiple comma-separated tags on one line work correctly:
-
-```
-; tag1:value 1, tag2:value 2
-```
-
-The tag_value `value 1` stops at `,`, leaving `, tag2:value 2` for the next comment repeat iteration.
 
 ### Unnecessary conflict declarations cause warnings
 

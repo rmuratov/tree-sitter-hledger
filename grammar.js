@@ -72,7 +72,7 @@ export default grammar({
         /[;#]/,
         repeat(
           choice(
-            prec(1, $.tag),
+            $.tag,
             TAG_NAME, // word that is NOT followed by ':' \u2014 plain text (anonymous)
             /[ \t]+/, // whitespace between words
             ":",      // standalone colon (not part of a tag)
@@ -95,9 +95,17 @@ export default grammar({
         /[^\n]*\n/
       ),
 
-    tag: ($) => prec.right(seq($.tag_name, ":", optional($.tag_value))),
-    tag_name: ($) => prec(1, TAG_NAME),
-    tag_value: ($) => token(prec(1, /[^,\n]+/)),
+    // A whole `name:value` tag as one opaque token: the name (no whitespace,
+    // `:`, or `,`), the colon, and the value running to the next `,` or end of
+    // line, ending on a non-space character. The name/value split is left to
+    // consumers: split on the first `:`, then trim. Being longer than the
+    // plain-word TAG_NAME match, this token wins by maximal munch — no lexer
+    // precedence needed; a space before the colon means the tag can't match
+    // and the text lexes as plain words.
+    tag: ($) => token(/[^ \t\n:,]+:([^,\n]*[^ ,\t\n])?/),
+
+    // Tag name as declared by the `tag` directive (no colon or value there).
+    tag_name: ($) => TAG_NAME,
 
     // Opaque comment line — no tag parsing. Used for top-level lines and
     // non-indented lines inside a transaction body. The newline is part of the

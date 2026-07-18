@@ -3,8 +3,9 @@
 (comment) @comment
 
 ; ─── Tags ─────────────────────────────────────────────────────────────────────
+; A tag is one opaque `name:value` node; tag_name only occurs in `tag` directives.
+(tag) @property
 (tag_name) @property
-(tag_value) @string
 
 ; ─── Dates ────────────────────────────────────────────────────────────────────
 (date) @number

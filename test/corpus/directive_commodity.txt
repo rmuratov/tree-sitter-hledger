@@ -122,9 +122,7 @@ commodity $1000.00    ; type:currency
       (commodity)
       (quantity))
     (comment
-      (tag
-        (tag_name)
-        (tag_value)))))
+      (tag))))
 
 ================================================================================
 Commodity directive with format subdirective

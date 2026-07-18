@@ -32,9 +32,7 @@ account assets:bank:checking    ; acctnum:12345
   (directive_account
     (account)
     (comment
-      (tag
-        (tag_name)
-        (tag_value)))))
+      (tag))))
 
 ================================================================================
 Account directive with next-line comment
@@ -74,6 +72,4 @@ account assets    ; type:A
   (directive_account
     (account)
     (comment
-      (tag
-        (tag_name)
-        (tag_value)))))
+      (tag))))

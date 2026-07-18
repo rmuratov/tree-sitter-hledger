@@ -88,12 +88,8 @@
             "type": "CHOICE",
             "members": [
               {
-                "type": "PREC",
-                "value": 1,
-                "content": {
-                  "type": "SYMBOL",
-                  "name": "tag"
-                }
+                "type": "SYMBOL",
+                "name": "tag"
               },
               {
                 "type": "PATTERN",
@@ -206,52 +202,15 @@
       ]
     },
     "tag": {
-      "type": "PREC_RIGHT",
-      "value": 0,
+      "type": "TOKEN",
       "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "SYMBOL",
-            "name": "tag_name"
-          },
-          {
-            "type": "STRING",
-            "value": ":"
-          },
-          {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "SYMBOL",
-                "name": "tag_value"
-              },
-              {
-                "type": "BLANK"
-              }
-            ]
-          }
-        ]
+        "type": "PATTERN",
+        "value": "[^ \\t\\n:,]+:([^,\\n]*[^ ,\\t\\n])?"
       }
     },
     "tag_name": {
-      "type": "PREC",
-      "value": 1,
-      "content": {
-        "type": "PATTERN",
-        "value": "[^ \\t\\n:,]+"
-      }
-    },
-    "tag_value": {
-      "type": "TOKEN",
-      "content": {
-        "type": "PREC",
-        "value": 1,
-        "content": {
-          "type": "PATTERN",
-          "value": "[^,\\n]+"
-        }
-      }
+      "type": "PATTERN",
+      "value": "[^ \\t\\n:,]+"
     },
     "_comment_line": {
       "type": "ALIAS",
